@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>No Damos Crédito · Tesorería y taquilla</title>
+<title>No Damos Crédito · Tesorería y donaciones</title>
 <link rel="icon" href="assets/favicon.png">
 <style>
 html, body { margin: 0; background: #FBF7EC; }
@@ -40,6 +40,8 @@ html, body { margin: 0; background: #FBF7EC; }
 
 /* ---------- titulares tipo cinta ---------- */
 .ndc .ndc-tape { margin: 48px 0 20px; line-height: 1; }
+.ndc .ndc-tape-first { margin-top: 4px; }
+.ndc-kpis-5 + .ndc-hero { margin-top: 28px; }
 .ndc-tape span { display: inline-block; background: var(--ink); color: #FFFDF3; font-family: var(--display); font-weight: 400; text-transform: uppercase; letter-spacing: .03em; font-size: clamp(22px, 3cqi, 30px); padding: 9px 26px 8px 18px; transform: rotate(-1.4deg); clip-path: polygon(0 0, 100% 0, 97% 100%, 1.5% 100%); }
 
 /* ---------- foco / saldo ---------- */
@@ -69,8 +71,8 @@ html, body { margin: 0; background: #FBF7EC; }
 
 /* ---------- cifras ---------- */
 .ndc-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin-top: 26px; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); }
-.ndc-kpis-obra { grid-template-columns: repeat(5, minmax(0, 1fr)); }
-.ndc-kpis-obra .ndc-kpi b { font-size: clamp(26px, 3.3cqi, 40px); }
+.ndc-kpis-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.ndc-kpis-5 .ndc-kpi b { font-size: clamp(26px, 3.3cqi, 40px); }
 .ndc-kpi { padding: 16px 14px 14px; border-left: 1px solid var(--line); min-width: 0; }
 .ndc-kpi:first-child { border-left: 0; padding-left: 2px; }
 .ndc-kpi b { display: block; font-family: var(--display); font-weight: 400; font-size: clamp(30px, 4.4cqi, 46px); line-height: 1.05; font-variant-numeric: tabular-nums; white-space: nowrap; }
@@ -106,6 +108,8 @@ html, body { margin: 0; background: #FBF7EC; }
 .ndc-seg { display: inline-flex; border: 1.5px solid var(--ink); border-radius: 999px; padding: 2px; background: #fff; flex-wrap: wrap; }
 .ndc-seg button { border: 0; background: transparent; padding: 5px 12px; border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--ink) !important; transition: background .2s; white-space: nowrap; }
 .ndc-seg button:hover { background: var(--yellow-soft); }
+.ndc-controls > .ndc-seg { display: flex; width: 100%; flex-wrap: nowrap; border-radius: 12px; }
+.ndc-controls > .ndc-seg button { flex: 1 1 0; white-space: normal; line-height: 1.2; border-radius: 9px; padding: 6px 4px; text-align: center; }
 .ndc-seg button[aria-pressed="true"] { background: var(--ink); color: #FFFDF3 !important; }
 
 /* beneficio */
@@ -126,7 +130,9 @@ html, body { margin: 0; background: #FBF7EC; }
 .ndc-obra-card:hover { transform: translate(-3px, -3px) rotate(-.6deg); box-shadow: 9px 9px 0 var(--yellow), 9px 9px 0 1.5px var(--ink); }
 .ndc-poster { background: var(--yellow) center / cover no-repeat; aspect-ratio: 1131 / 1600; display: grid; place-items: center; font-family: var(--display); font-size: 64px; color: var(--ink); text-transform: uppercase; }
 .ndc-poster.has-img span { display: none; }
-.ndc-obra-card .ndc-poster { aspect-ratio: 4 / 3; background-position: center 46%; background-size: 135%; border-bottom: 1.5px solid var(--ink); width: 100%; }
+.ndc-poster.has-img { aspect-ratio: auto; background: none; display: block; }
+.ndc-poster img { display: block; width: 100%; height: auto; }
+.ndc-obra-card .ndc-poster { border-bottom: 1.5px solid var(--ink); width: 100%; }
 .ndc-obra-body { padding: 16px 18px 18px; display: grid; gap: 4px; }
 .ndc-obra-title { font-family: var(--display); font-size: 34px; line-height: 1; text-transform: uppercase; letter-spacing: .02em; }
 .ndc-obra-sub { color: var(--muted); font-size: 14px; }
@@ -138,8 +144,9 @@ html, body { margin: 0; background: #FBF7EC; }
 .ndc .ndc-back { background: none; border: 1.5px solid var(--ink); border-radius: 999px; padding: 7px 16px; font-weight: 600; font-size: 14px; margin-bottom: 20px; transition: background .2s, transform .15s; }
 .ndc-back:hover { background: var(--yellow); transform: translateX(-3px); }
 .ndc-ficha-head { display: grid; grid-template-columns: minmax(150px, 230px) minmax(0, 1fr); gap: clamp(18px, 3.4cqi, 40px); align-items: center; min-height: 200px; }
-.ndc-ficha-head .ndc-poster { border: 1.5px solid var(--ink); border-radius: 10px; box-shadow: 6px 6px 0 var(--yellow), 6px 6px 0 1.5px var(--ink); transform: rotate(-2deg); width: 100%; }
-.ndc-ficha-title { font-family: var(--display); font-weight: 400; font-size: clamp(54px, 10.5cqi, 124px); line-height: .92; text-transform: uppercase; letter-spacing: .02em; overflow-wrap: anywhere; }
+.ndc-ficha-head .ndc-poster { overflow: hidden; border: 1.5px solid var(--ink); border-radius: 10px; box-shadow: 6px 6px 0 var(--yellow), 6px 6px 0 1.5px var(--ink); transform: rotate(-2deg); width: 100%; }
+.ndc-ficha-title { font-family: var(--display); font-weight: 400; font-size: clamp(54px, 10.5cqi, 124px); line-height: .92; text-transform: uppercase; letter-spacing: .02em; overflow-wrap: break-word; hyphens: manual; }
+.ndc-ficha-title.is-long { font-size: clamp(40px, 6.6cqi, 88px); line-height: .95; }
 .ndc-ficha-sub { font-size: 18px; color: var(--muted); margin-top: 6px; }
 .ndc-ficha-meta { display: grid; gap: 4px; margin-top: 16px; font-size: 15px; }
 .ndc-ficha-meta b { font-weight: 700; }
@@ -214,15 +221,15 @@ html, body { margin: 0; background: #FBF7EC; }
 @container (max-width: 1080px) {
   .ndc-grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ndc-grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-  .ndc-kpis-obra { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-  .ndc-kpis-obra .ndc-kpi:nth-child(4) { border-left: 0; padding-left: 2px; }
-  .ndc-kpis-obra .ndc-kpi:nth-child(n+4) { border-top: 1px solid var(--line); }
+  .ndc-kpis-5 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .ndc-kpis-5 .ndc-kpi:nth-child(4) { border-left: 0; padding-left: 2px; }
+  .ndc-kpis-5 .ndc-kpi:nth-child(n+4) { border-top: 1px solid var(--line); }
 }
 @container (max-width: 760px) {
   .ndc-hero { grid-template-columns: minmax(0, 1fr); }
-  .ndc-kpis, .ndc-kpis-obra { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ndc-kpis, .ndc-kpis-5 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .ndc-kpi:nth-child(odd) { border-left: 0; padding-left: 2px; }
-  .ndc-kpis-obra .ndc-kpi:nth-child(4) { border-left: 1px solid var(--line); padding-left: 14px; }
+  .ndc-kpis-5 .ndc-kpi:nth-child(4) { border-left: 1px solid var(--line); padding-left: 14px; }
   .ndc-kpi:nth-child(n+3) { border-top: 1px solid var(--line); }
   .ndc-grid-3 { grid-template-columns: minmax(0, 1fr); }
 }
@@ -271,7 +278,7 @@ html, body { margin: 0; background: #FBF7EC; }
   <header class="ndc-top" id="cabecera">
     <img class="ndc-logo" alt="No Damos Crédito" src="assets/logo.png">
     <div class="ndc-top-title">
-      <h1 id="titulo">Tesorería y taquilla</h1>
+      <h1 id="titulo">Tesorería y donaciones</h1>
       <p>El histórico de la compañía, función a función.</p>
     </div>
     <nav class="ndc-tabs" role="tablist" aria-label="Apartados">
@@ -288,6 +295,15 @@ html, body { margin: 0; background: #FBF7EC; }
   <!-- ============ VISIÓN GENERAL ============ -->
   <section class="ndc-page" id="inicio" role="tabpanel" aria-labelledby="tab-inicio">
 
+    <h2 class="ndc-tape ndc-tape-first" id="kpi-clave"><span>KPI clave</span></h2>
+    <div class="ndc-kpis ndc-kpis-5" id="historico">
+      <div class="ndc-kpi"><b data-draw="total" data-field="media_obra">—</b><span>recaudación media por obra</span></div>
+      <div class="ndc-kpi"><b data-draw="total" data-field="por_espectador">—</b><span>donación media por espectador</span></div>
+      <div class="ndc-kpi"><b data-draw="total" data-field="asistentes_funcion">—</b><span>asistentes medios por función</span></div>
+      <div class="ndc-kpi"><b data-draw="total" data-field="capacidad_funcion">—</b><span>capacidad media por función</span></div>
+      <div class="ndc-kpi"><b data-draw="total" data-field="obras">—</b><span>obras en el histórico</span></div>
+    </div>
+
     <div class="ndc-hero">
       <div class="ndc-beam" id="saldo">
         <span class="ndc-lamp" aria-hidden="true"></span>
@@ -303,13 +319,6 @@ html, body { margin: 0; background: #FBF7EC; }
         <ul class="ndc-mini-list" data-draw="ultimos-gastos" data-source="gastos"></ul>
         <p class="ndc-empty" hidden>Aún no hay gastos anotados. Aparecerán aquí en cuanto se registren.</p>
       </aside>
-    </div>
-
-    <div class="ndc-kpis" id="historico">
-      <div class="ndc-kpi"><b data-draw="total" data-source="totales" data-field="recaudacion" data-row="0">—</b><span>recaudados en taquilla</span></div>
-      <div class="ndc-kpi"><b data-draw="total" data-source="totales" data-field="asistentes" data-row="0">—</b><span>espectadores</span></div>
-      <div class="ndc-kpi"><b data-draw="total" data-source="totales" data-field="funciones" data-row="0">—</b><span>funciones celebradas</span></div>
-      <div class="ndc-kpi"><b data-draw="total" data-source="totales" data-field="obras" data-row="0">—</b><span>obras en el histórico</span></div>
     </div>
 
     <h2 class="ndc-tape" id="ranking-obras"><span>Ranking de obras</span></h2>
@@ -341,35 +350,46 @@ html, body { margin: 0; background: #FBF7EC; }
       <article class="ndc-card" id="rk-actores">
         <h3>Actores</h3>
         <div class="ndc-controls">
-          <div class="ndc-seg" role="group" aria-label="Qué se ordena" data-for="home-actores" data-ctl="metric">
+          <div class="ndc-seg" role="group" aria-label="Cómo se ordena" data-for="home-actores" data-ctl="metric">
+            <button type="button" data-val="obras" aria-pressed="false">Número de obras</button>
             <button type="button" data-val="media" aria-pressed="true">Media por función</button>
             <button type="button" data-val="total" aria-pressed="false">Total acumulado</button>
           </div>
-          <div class="ndc-seg" role="group" aria-label="Quién entra" data-for="home-actores" data-ctl="scope">
-            <button type="button" data-val="reparto" aria-pressed="true">Todo el reparto</button>
-            <button type="button" data-val="protagonista" aria-pressed="false">Solo protagonistas</button>
+        </div>
+        <div id="home-actores" data-draw="rank-personas" data-grupo="actores" data-scope="todas" data-source="personas">—</div>
+        <p class="ndc-note">A cada persona se le atribuye la recaudación completa de las funciones en las que participó: indica en qué funciones estuvo, no cuánto recaudó por sí sola.</p>
+      </article>
+      <article class="ndc-card" id="rk-tecnicos">
+        <h3>Técnicos</h3>
+        <div class="ndc-controls">
+          <div class="ndc-seg" role="group" aria-label="Cómo se ordena" data-for="home-tecnicos" data-ctl="metric">
+            <button type="button" data-val="obras" aria-pressed="false">Número de obras</button>
+            <button type="button" data-val="media" aria-pressed="true">Media por función</button>
+            <button type="button" data-val="total" aria-pressed="false">Total acumulado</button>
           </div>
         </div>
-        <div id="home-actores" data-draw="rank-personas" data-grupo="reparto" data-scope="todas" data-source="personas">—</div>
-        <p class="ndc-note">A cada persona se le atribuye la recaudación completa de las funciones en las que actuó: indica en qué funciones estuvo, no cuánto recaudó por sí sola.</p>
+        <div id="home-tecnicos" data-draw="rank-personas" data-grupo="tecnicos" data-scope="todas" data-source="personas">—</div>
+        <p class="ndc-note">Recaudación de las funciones en las que formó parte del equipo técnico.</p>
       </article>
       <article class="ndc-card" id="rk-directores">
         <h3>Directores</h3>
         <div class="ndc-controls">
-          <div class="ndc-seg" role="group" aria-label="Qué se ordena" data-for="home-directores" data-ctl="metric">
-            <button type="button" data-val="total" aria-pressed="true">Total acumulado</button>
-            <button type="button" data-val="media" aria-pressed="false">Media por función</button>
+          <div class="ndc-seg" role="group" aria-label="Cómo se ordena" data-for="home-directores" data-ctl="metric">
+            <button type="button" data-val="obras" aria-pressed="false">Número de obras</button>
+            <button type="button" data-val="media" aria-pressed="true">Media por función</button>
+            <button type="button" data-val="total" aria-pressed="false">Total acumulado</button>
           </div>
         </div>
         <div id="home-directores" data-draw="rank-personas" data-grupo="direccion" data-scope="todas" data-source="personas">—</div>
         <p class="ndc-note">Recaudación de las funciones de las obras que ha dirigido.</p>
       </article>
-      <article class="ndc-card" id="rk-beneficio">
-        <h3>Obras por beneficio</h3>
-        <p class="ndc-hint">Gasto total frente a total recaudado, en la misma escala.</p>
-        <div data-draw="beneficio" data-source="obras_stats">—</div>
-      </article>
     </div>
+
+    <h2 class="ndc-tape" id="beneficio"><span>Obras por beneficio</span></h2>
+    <article class="ndc-card" id="rk-beneficio">
+      <p class="ndc-hint">Gasto total frente a total recaudado, en la misma escala.</p>
+      <div data-draw="beneficio" data-source="obras_stats">—</div>
+    </article>
   </section>
 
   <!-- ============ OBRAS ============ -->
@@ -378,7 +398,7 @@ html, body { margin: 0; background: #FBF7EC; }
     <div id="obras-lista">
       <h2 class="ndc-tape" id="todas-las-obras"><span>Todas las obras</span></h2>
       <div class="ndc-obras-grid" data-draw="obras-grid" data-source="obras_stats"></div>
-      <p class="ndc-note">Cada obra nueva aparece aquí en cuanto se añade su hoja al Excel.</p>
+      <p class="ndc-note">Cada obra nueva aparece aquí en cuanto se añade su Excel a la carpeta data.</p>
     </div>
 
     <div id="obra-ficha" hidden>
@@ -386,7 +406,7 @@ html, body { margin: 0; background: #FBF7EC; }
 
       <div class="ndc-ficha-head" id="obra-cabecera" data-draw="obra-cabecera" data-source="obras_stats sesiones">—</div>
 
-      <div class="ndc-kpis ndc-kpis-obra" id="obra-cifras">
+      <div class="ndc-kpis ndc-kpis-5" id="obra-cifras">
         <div class="ndc-kpi"><b data-draw="obra-kpi" data-field="recaudacion">—</b><span>recaudados</span></div>
         <div class="ndc-kpi"><b data-draw="obra-kpi" data-field="asistentes">—</b><span>espectadores</span></div>
         <div class="ndc-kpi"><b data-draw="obra-kpi" data-field="ocupacion">—</b><span>de ocupación</span></div>
@@ -459,7 +479,7 @@ html, body { margin: 0; background: #FBF7EC; }
           <h3>Receptores de Bizum</h3>
           <p class="ndc-hint">Quién ha recibido los Bizum del público.</p>
           <div data-draw="obra-bizum" data-source="bizum_receptores">—</div>
-          <p class="ndc-empty" hidden>Todavía no hay Bizum anotados en esta obra.</p>
+          <p class="ndc-empty" hidden>No hay Bizum anotados en esta obra.</p>
         </article>
         <article class="ndc-card" id="obra-gastos-card">
           <h3>Gastos y beneficio</h3>
@@ -473,23 +493,21 @@ html, body { margin: 0; background: #FBF7EC; }
         </article>
       </div>
 
-      <h2 class="ndc-tape" id="obra-reparto-titulo"><span>Sobre el escenario</span></h2>
+      <h2 class="ndc-tape" id="obra-reparto-titulo"><span>El equipo</span></h2>
       <article class="ndc-card" id="obra-reparto-card">
         <div class="ndc-card-head">
-          <h3>Ranking del reparto</h3>
-          <div class="ndc-controls">
-            <div class="ndc-seg" role="group" aria-label="Qué se ordena" data-for="obra-actores" data-ctl="metric">
-              <button type="button" data-val="media" aria-pressed="true">Media por función</button>
-              <button type="button" data-val="total" aria-pressed="false">Total acumulado</button>
-            </div>
-            <div class="ndc-seg" role="group" aria-label="Quién entra" data-for="obra-actores" data-ctl="scope">
-              <button type="button" data-val="reparto" aria-pressed="true">Todo el reparto</button>
-              <button type="button" data-val="protagonista" aria-pressed="false">Solo protagonistas</button>
-            </div>
+          <div class="ndc-seg" role="group" aria-label="Quién se muestra" data-for="obra-actores" data-ctl="grupo">
+            <button type="button" data-val="actores" aria-pressed="true">Actores</button>
+            <button type="button" data-val="tecnicos" aria-pressed="false">Técnicos</button>
+            <button type="button" data-val="direccion" aria-pressed="false">Directores</button>
+          </div>
+          <div class="ndc-seg" role="group" aria-label="Cómo se ordena" data-for="obra-actores" data-ctl="metric">
+            <button type="button" data-val="media" aria-pressed="true">Media por función</button>
+            <button type="button" data-val="total" aria-pressed="false">Total acumulado</button>
           </div>
         </div>
-        <div id="obra-actores" class="ndc-rank-cols" data-draw="rank-personas" data-grupo="reparto" data-scope="obra" data-source="personas">—</div>
-        <p class="ndc-note">A cada persona se le atribuye la recaudación completa de las funciones en las que actuó: indica en qué funciones estuvo, no cuánto recaudó por sí sola.</p>
+        <div id="obra-actores" class="ndc-rank-cols" data-draw="rank-personas" data-scope="obra" data-source="personas">—</div>
+        <p class="ndc-note">A cada persona se le atribuye la recaudación completa de las funciones de esta obra en las que participó: indica en qué funciones estuvo, no cuánto recaudó por sí sola.</p>
       </article>
     </div>
   </section>
@@ -501,7 +519,12 @@ html, body { margin: 0; background: #FBF7EC; }
 /* Excel que lee el panel, dentro de la carpeta data/.
    Cada hoja con columnas "Sesión" y "Fecha" es una obra (el nombre de la hoja es el título).
    Una hoja con "Fecha" y "Saldo" es el saldo del banco; una con "Concepto" e "Importe", los gastos. */
-const ARCHIVOS = ['RECUADACIONES.xlsx'];
+const ARCHIVOS = [
+  'RECAUDACION_HAMILTON.xlsx',
+  'Recaudacion_Luna_Sobre_Buffalo.xlsx',
+  'Recaudacion_La_Funcion_que_sale_mal.xlsx',
+  'TESORERIA.xlsx',
+];
 
 (() => {
   const datos = {}, calculos = {}, dibujos = {};
@@ -573,7 +596,7 @@ const ARCHIVOS = ['RECUADACIONES.xlsx'];
     if (typeof v === 'number') { if (v < 1) { const min = Math.round(v * 1440); return dos(Math.floor(min / 60)) + ':' + dos(min % 60); } return dos(Math.floor(v)) + ':' + dos(Math.round((v - Math.floor(v)) * 100)); }
     const m = /^(\d{1,2})\s*[.:h]\s*(\d{2})?/.exec(String(v)); return m ? dos(m[1]) + ':' + (m[2] || '00') : String(v);
   };
-  const titulo = (t) => String(t).trim().toLowerCase().replace(/(^|[\s-])(\p{L})/gu, (_, a, b) => a + b.toUpperCase());
+  const titulo = (t) => (String(t).trim() !== String(t).trim().toUpperCase() ? String(t).trim() : String(t).trim().toLowerCase().replace(/(^|[\s-])(\p{L})/gu, (_, a, b) => a + b.toUpperCase()));
   const lista = (v) => String(v == null ? '' : v).split(/[;\n]/).map((x) => x.trim()).filter(Boolean);
 
   const monta = (libros) => {
@@ -587,7 +610,7 @@ const ARCHIVOS = ['RECUADACIONES.xlsx'];
       if (cSesion >= 0 && cFecha >= 0) {                    /* hoja de una obra */
         const obra = llano(hoja.nombre).replace(/ /g, '-');
         const c = { dia: col('dia'), hora: col('hora'), efectivo: col('efectivo'), bizum: col('bizum'), asistentes: col('asistentes', /^asistentes/), aforo: col('aforo'),
-          prot: col(/^protagonistas/), ens: col(/^ensemble/), tec: col(/^tecnicos/), dir: col(/^director/, /^direccion/) };
+          act: cab.map((x, i) => (/^(protagonistas|ensemble|actores|actrices|reparto|elenco)\b/.test(x || '') ? i : -1)).filter((i) => i >= 0), tec: col(/^tecnicos/), dir: col(/^director/, /^direccion/) };
         const pares = cab.map((x, i) => { const m = /^receptor bizum\s*(\d*)$/.exec(x || ''); return m ? { receptor: i, importe: cab.findIndex((y) => y && new RegExp('^recaudacion bizum\\s*' + m[1] + '$').test(y)) } : null; }).filter((x) => x && x.importe >= 0);
         obras.push({ obra, titulo: titulo(hoja.nombre), descripcion: null, lugar: null, direccion: null });
         for (const f of cuerpo) {
@@ -599,8 +622,8 @@ const ARCHIVOS = ['RECUADACIONES.xlsx'];
           if (bizum == null && efectivo != null) bizum = 0;
           const fila = { obra, sesion: n, fecha: aFecha(f[cFecha]), dia: c.dia >= 0 ? f[c.dia] : null, hora: c.hora >= 0 ? aHora(f[c.hora]) : null,
             efectivo, bizum, asistentes: c.asistentes >= 0 ? numero(f[c.asistentes]) : null, aforo: c.aforo >= 0 ? numero(f[c.aforo]) : null,
-            protagonistas: c.prot >= 0 ? lista(f[c.prot]) : [], ensemble: c.ens >= 0 ? lista(f[c.ens]) : [], tecnicos: c.tec >= 0 ? lista(f[c.tec]) : [], director: c.dir >= 0 ? lista(f[c.dir]) : [] };
-          [...fila.protagonistas, ...fila.ensemble, ...fila.tecnicos, ...fila.director].forEach(anota);
+            actores: c.act.flatMap((i) => lista(f[i])), tecnicos: c.tec >= 0 ? lista(f[c.tec]) : [], director: c.dir >= 0 ? lista(f[c.dir]) : [] };
+          [...fila.actores, ...fila.tecnicos, ...fila.director].forEach(anota);
           sesiones.push(fila);
         }
       } else if (cFecha >= 0 && col('saldo') >= 0) {        /* hoja del saldo del banco */
@@ -613,7 +636,7 @@ const ARCHIVOS = ['RECUADACIONES.xlsx'];
     }
     /* "Jaime Abengozar" y "Jaime Abengózar" son la misma persona: se queda la forma más repetida */
     const forma = (n) => { const m = vistos.get(llano(n)); return m ? [...m.entries()].sort((a, b) => b[1] - a[1] || b[0].replace(/[\x00-\x7f]/g, '').length - a[0].replace(/[\x00-\x7f]/g, '').length)[0][0] : n; };
-    for (const s of sesiones) for (const k of ['protagonistas', 'ensemble', 'tecnicos', 'director']) s[k] = [...new Set(s[k].map(forma))].join('; ');
+    for (const s of sesiones) for (const k of ['actores', 'tecnicos', 'director']) s[k] = [...new Set(s[k].map(forma))].join('; ');
     for (const b of bizums) b.receptor = forma(b.receptor);
     return { sesiones, bizums, obras, gastos, cuenta };
   };
@@ -631,13 +654,15 @@ const ARCHIVOS = ['RECUADACIONES.xlsx'];
     setLink(nombre) { try { history.replaceState(null, '', '#' + nombre); } catch (e) {} },
     async start() {
       pintaTodo();
-      try {
-        carga(await Promise.all(ARCHIVOS.map(async (n) => {
+      /* Cada Excel se carga por separado: si falta uno, el resto se muestra igual */
+      const libros = await Promise.all(ARCHIVOS.map(async (n) => {
+        try {
           const r = await fetch('data/' + encodeURIComponent(n), { cache: 'no-store' });
           if (!r.ok) throw new Error('data/' + n + ' (' + r.status + ')');
-          return leeXlsx(await r.arrayBuffer());
-        })));
-      } catch (e) { console.error('No se pudo leer el Excel', e); aviso(true); }
+          return await leeXlsx(await r.arrayBuffer());
+        } catch (e) { console.warn('No se pudo leer ' + n, e); return null; }
+      }));
+      if (libros.some(Boolean)) carga(libros.filter(Boolean)); else aviso(true);
     },
   });
   const carga = (libros) => { Object.assign(datos, monta(libros)); cache = {}; listo = true; aviso(false); pintaTodo(); };
@@ -696,7 +721,11 @@ dash.calc('obras_stats', {
     const hechas = todas.filter((f) => f.celebrada);
     const fechas = todas.map((f) => f.fecha).filter(Boolean).sort();
     const recaudacion = suma(hechas, 'total'), efectivo = suma(hechas, 'efectivo'), bizum = suma(hechas, 'bizum');
-    const asistentes = suma(hechas, 'asistentes'), aforo = suma(hechas, 'aforo');
+    /* Asistentes, ocupación y euros por espectador solo cuentan funciones con asistentes anotados
+       (y la ocupación, además, con aforo), para no mezclar dinero o butacas sin su público */
+    const conPublico = hechas.filter((f) => f.asistentes != null), conAforo = conPublico.filter((f) => f.aforo);
+    const asistentes = suma(conPublico, 'asistentes'), aforo = suma(conAforo, 'aforo');
+    const recaudacion_con_publico = suma(conPublico, 'total');
     const susGastos = gastos.filter((g) => g.obra === o.obra);
     const gasto = susGastos.length ? suma(susGastos, 'importe') : null;
     return {
@@ -704,24 +733,35 @@ dash.calc('obras_stats', {
       primera_fecha: fechas[0] || null, ultima_fecha: fechas[fechas.length - 1] || null,
       funciones_programadas: todas.length, funciones: hechas.length,
       recaudacion, efectivo, bizum, pct_bizum: recaudacion ? bizum / recaudacion * 100 : null,
-      asistentes, aforo, ocupacion: aforo ? asistentes / aforo * 100 : null,
+      asistentes, aforo, funciones_con_publico: conPublico.length, funciones_con_aforo: conAforo.length, recaudacion_con_publico,
+      ocupacion: aforo ? suma(conAforo, 'asistentes') / aforo * 100 : null,
       media_funcion: hechas.length ? recaudacion / hechas.length : null,
-      por_asistente: asistentes ? recaudacion / asistentes : null,
+      por_asistente: asistentes ? recaudacion_con_publico / asistentes : null,
       gasto, beneficio: gasto == null ? null : r2(recaudacion - gasto),
     };
   }),
 });
 
 dash.calc('totales', {
-  title: 'Histórico de la compañía',
-  description: 'Suma de todas las obras: recaudación en taquilla, espectadores, funciones celebradas y número de obras.',
-  inputs: ['obras_stats'],
-  fn: (obras_stats) => [{
-    recaudacion: Math.round(obras_stats.reduce((t, o) => t + o.recaudacion, 0) * 100) / 100,
-    asistentes: obras_stats.reduce((t, o) => t + o.asistentes, 0),
-    funciones: obras_stats.reduce((t, o) => t + o.funciones, 0),
-    obras: obras_stats.length,
-  }],
+  title: 'KPI clave de la compañía',
+  description: 'KPI clave: recaudación media por obra, donación media por espectador, asistentes y capacidad medios por función, y número de obras.',
+  inputs: ['obras_stats', 'funciones'],
+  fn: (obras_stats, funciones) => {
+    const hechas = funciones.filter((f) => f.celebrada);
+    const conFunciones = obras_stats.filter((o) => o.funciones > 0);
+    const recaudacion = obras_stats.reduce((t, o) => t + o.recaudacion, 0);
+    const asistentes = obras_stats.reduce((t, o) => t + o.asistentes, 0);
+    const conPublico = obras_stats.reduce((t, o) => t + o.funciones_con_publico, 0);
+    const recConPublico = obras_stats.reduce((t, o) => t + o.recaudacion_con_publico, 0);
+    const conOcupacion = hechas.filter((f) => f.ocupacion != null);
+    return [{
+      media_obra: conFunciones.length ? recaudacion / conFunciones.length : null,
+      por_espectador: asistentes ? recConPublico / asistentes : null,
+      asistentes_funcion: conPublico ? asistentes / conPublico : null,
+      capacidad_funcion: conOcupacion.length ? conOcupacion.reduce((t, f) => t + f.ocupacion, 0) / conOcupacion.length : null,
+      obras: obras_stats.length,
+    }];
+  },
 });
 
 dash.calc('saldo_actual', {
@@ -735,35 +775,29 @@ dash.calc('saldo_actual', {
 
 dash.calc('personas', {
   title: 'Recaudación atribuida a cada persona',
-  description: 'A cada intérprete y director se le suma la recaudación completa de las funciones celebradas en las que participó, por obra y en el conjunto ("todas"). Se separa lo que corresponde a funciones como protagonista.',
+  description: 'A cada actor, técnico y director se le suma la recaudación completa de las funciones celebradas en las que participó, por obra y en el conjunto ("todas"), junto con en cuántas obras ha estado.',
   inputs: ['sesiones', 'funciones'],
   fn: (sesiones, funciones) => {
     const lista = (t) => String(t || '').split(';').map((x) => x.trim()).filter(Boolean);
     const mapa = new Map();
-    const anota = (obra, persona, grupo, papel, f) => {
+    const anota = (obra, persona, grupo, f) => {
       for (const ambito of [obra, 'todas']) {
         const k = ambito + '|' + grupo + '|' + persona;
-        const r = mapa.get(k) || { obra: ambito, persona, grupo, obras: new Set(), funciones: 0, protagonista: 0, ensemble: 0, recaudacion: 0, rec_protagonista: 0 };
+        const r = mapa.get(k) || { obra: ambito, persona, grupo, obras: new Set(), funciones: 0, recaudacion: 0 };
         r.obras.add(obra); r.funciones += 1; r.recaudacion += f.total;
-        if (papel === 'protagonista') { r.protagonista += 1; r.rec_protagonista += f.total; }
-        if (papel === 'ensemble') r.ensemble += 1;
         mapa.set(k, r);
       }
     };
     for (const s of sesiones) {
       const f = funciones.find((x) => x.obra === s.obra && x.sesion === +s.sesion);
       if (!f || !f.celebrada) continue;
-      for (const p of lista(s.protagonistas)) anota(s.obra, p, 'reparto', 'protagonista', f);
-      for (const p of lista(s.ensemble)) anota(s.obra, p, 'reparto', 'ensemble', f);
-      for (const p of lista(s.director)) anota(s.obra, p, 'direccion', 'direccion', f);
+      for (const [campo, grupo] of [['actores', 'actores'], ['tecnicos', 'tecnicos'], ['director', 'direccion']])
+        for (const p of new Set(lista(s[campo]))) anota(s.obra, p, grupo, f);
     }
     const r2 = (x) => Math.round(x * 100) / 100;
     return [...mapa.values()].map((r) => ({
-      obra: r.obra, persona: r.persona, grupo: r.grupo, obras: r.obras.size,
-      funciones: r.funciones, protagonista: r.protagonista, ensemble: r.ensemble,
+      obra: r.obra, persona: r.persona, grupo: r.grupo, obras: r.obras.size, funciones: r.funciones,
       recaudacion: r2(r.recaudacion), media: r2(r.recaudacion / r.funciones),
-      rec_protagonista: r2(r.rec_protagonista),
-      media_protagonista: r.protagonista ? r2(r.rec_protagonista / r.protagonista) : null,
     }));
   },
 });
@@ -818,7 +852,7 @@ dash.calc('gastos_categorias', {
   const MES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
   const partes = (s) => { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(s || '')); return m ? { y: +m[1], m: +m[2], d: +m[3] } : null; };
   const fecha = (s, conAnio) => { const p = partes(s); return p ? p.d + ' ' + MES[p.m - 1] + (conAnio ? ' ' + p.y : '') : '—'; };
-  const FMT = { recaudacion: eur, media_funcion: eur, por_asistente: eur, gasto: eur, beneficio: eur, total: eur, efectivo: eur, bizum: eur, asistentes: ent, funciones: ent, obras: ent, ocupacion: pct };
+  const FMT = { media_obra: eur, por_espectador: eur, asistentes_funcion: ent, capacidad_funcion: pct, recaudacion: eur, media_funcion: eur, por_asistente: eur, gasto: eur, beneficio: eur, total: eur, efectivo: eur, bizum: eur, asistentes: ent, funciones: ent, obras: ent, ocupacion: pct };
 
   const h = (tag, props, ...kids) => {
     const e = document.createElement(tag);
@@ -918,9 +952,9 @@ dash.calc('gastos_categorias', {
     const filas = dash.data('obras_stats').data.filter((o) => o.funciones > 0 && o[m] != null)
       .map((o) => ({
         id: o.obra, nombre: o.titulo, valor: o[m],
-        sub: m === 'ocupacion' ? ent(o.asistentes) + ' de ' + ent(o.aforo) + ' butacas en ' + o.funciones + ' funciones'
+        sub: m === 'ocupacion' ? ent(o.asistentes) + ' de ' + ent(o.aforo) + ' butacas en ' + o.funciones_con_aforo + (o.funciones_con_aforo === 1 ? ' función' : ' funciones') + (o.funciones_con_aforo < o.funciones ? ' con datos de público' : '')
           : m === 'media_funcion' ? o.funciones + ' funciones celebradas'
-          : m === 'asistentes' ? o.funciones + ' funciones celebradas'
+          : m === 'asistentes' ? (o.funciones_con_publico < o.funciones ? o.funciones_con_publico + ' de ' + o.funciones + ' funciones con asistentes anotados' : o.funciones + ' funciones celebradas')
           : o.funciones + ' de ' + o.funciones_programadas + ' funciones celebradas',
       })).sort((a, b) => b.valor - a.valor);
     if (!filas.length) return el.replaceChildren(h('span', { class: 'ndc-fail', text: 'Aún no hay funciones celebradas.' }));
@@ -929,31 +963,29 @@ dash.calc('gastos_categorias', {
   });
   dash.draw('rank-personas', (el) => {
     const st = estado(['personas']); if (st !== 'ok') return espera(el, st);
-    const grupo = el.dataset.grupo, ambito = el.dataset.scope === 'obra' ? N.obra : 'todas';
-    const metrica = ctl(el.id, 'metric', 'media'), quien = ctl(el.id, 'scope', 'reparto');
-    const prota = grupo === 'reparto' && quien === 'protagonista';
-    const plural = (n, uno, varios) => n + ' ' + (n === 1 ? uno : varios);
-    let filas = dash.data('personas').data.filter((p) => p.obra === ambito && p.grupo === grupo && (!prota || p.protagonista > 0)).map((p) => {
-      const n = prota ? p.protagonista : p.funciones;
-      const total = prota ? p.rec_protagonista : p.recaudacion, media = prota ? p.media_protagonista : p.media;
-      let sub;
-      if (grupo === 'direccion') sub = plural(p.obras, 'obra', 'obras') + ' · ' + plural(n, 'función', 'funciones');
-      else if (prota) sub = plural(n, 'función', 'funciones') + ' como protagonista';
-      else sub = plural(n, 'función', 'funciones') + (p.protagonista && p.ensemble ? ' · ' + p.protagonista + ' de protagonista y ' + p.ensemble + ' en el ensemble' : p.protagonista ? ' · siempre de protagonista' : ' · siempre en el ensemble');
-      sub += metrica === 'media' ? ' · ' + eur(total) + ' en total' : ' · ' + eur(media) + ' de media';
-      return { nombre: p.persona, valor: metrica === 'media' ? media : total, sub, n };
-    }).sort((a, b) => b.valor - a.valor || b.n - a.n || a.nombre.localeCompare(b.nombre, 'es'));
+    const enObra = el.dataset.scope === 'obra', ambito = enObra ? N.obra : 'todas';
+    const grupo = enObra ? ctl(el.id, 'grupo', 'actores') : el.dataset.grupo;
+    const metrica = ctl(el.id, 'metric', 'media');
+    const plural = (n, uno, varios) => nf0.format(n) + ' ' + (n === 1 ? uno : varios);
+    const filas = dash.data('personas').data.filter((p) => p.obra === ambito && p.grupo === grupo).map((p) => {
+      const partes = [];
+      if (metrica !== 'obras' && !enObra) partes.push(plural(p.obras, 'obra', 'obras'));
+      partes.push(plural(p.funciones, 'función', 'funciones'));
+      if (metrica !== 'total') partes.push(eur(p.recaudacion) + ' en total');
+      if (metrica !== 'media') partes.push(eur(p.media) + ' de media');
+      return { nombre: p.persona, valor: metrica === 'obras' ? p.obras : metrica === 'media' ? p.media : p.recaudacion, total: p.recaudacion, sub: partes.join(' · ') };
+    }).sort((a, b) => b.valor - a.valor || b.total - a.total || a.nombre.localeCompare(b.nombre, 'es'));
     if (!filas.length) return el.replaceChildren(h('span', { class: 'ndc-fail', text: 'Aún no hay funciones celebradas.' }));
-    const limite = el.dataset.scope === 'obra' ? 12 : 6, clave = el.id, todo = N.more.has(clave), n = filas.length;
-    const lista = ranking(todo ? filas : filas.slice(0, limite), { fmt: eur, max: Math.max(...filas.map((f) => f.valor)) });
-    const kids = [lista];
+    const limite = enObra ? 12 : 6, clave = el.id + '-' + grupo, todo = N.more.has(clave), n = filas.length;
+    const fmt = metrica === 'obras' ? (v) => plural(v, 'obra', 'obras') : eur;
+    const kids = [ranking(todo ? filas : filas.slice(0, limite), { fmt, max: Math.max(...filas.map((f) => f.valor)) })];
     if (n > limite) {
       const b = h('button', { type: 'button', class: 'ndc-more', text: todo ? 'Ver menos' : 'Ver los ' + n });
       b.addEventListener('click', () => { todo ? N.more.delete(clave) : N.more.add(clave); dash.draw('rank-personas'); });
       kids.push(b);
     }
     el.replaceChildren(...kids);
-    crece(el, primera('personas-' + clave + '-' + ambito));
+    crece(el, primera('personas-' + clave + '-' + ambito + '-' + metrica));
   });
   dash.draw('beneficio', (el) => {
     const st = estado(['obras_stats']); if (st !== 'ok') return espera(el, st);
@@ -977,7 +1009,8 @@ dash.calc('gastos_categorias', {
     const p = h('div', { class: 'ndc-poster', 'data-obra': o.obra, role: 'img', 'aria-label': 'Cartel de ' + o.titulo }, h('span', { text: String(o.titulo || '?').slice(0, 1) }));
     /* El cartel se busca en assets/carteles/<obra>.jpg; si no existe queda el bloque amarillo con la inicial */
     const src = 'assets/carteles/' + encodeURIComponent(o.obra) + '.jpg', img = new Image();
-    img.onload = () => { p.style.backgroundImage = 'url("' + src + '")'; p.classList.add('has-img'); };
+    img.alt = ''; img.decoding = 'async';
+    img.onload = () => { p.classList.add('has-img'); p.append(img); };
     img.src = src;
     return p;
   };
@@ -1017,7 +1050,7 @@ dash.calc('gastos_categorias', {
     const dir = unicos('director'), tec = unicos('tecnicos');
     const puntos = h('span', { class: 'ndc-dots', 'aria-hidden': 'true' }, Array.from({ length: o.funciones_programadas }, (_, i) => h('i', { class: i < o.funciones ? 'is-on' : '', style: '--i:' + i })));
     el.replaceChildren(poster(o), h('div', {},
-      h('h2', { class: 'ndc-ficha-title', text: o.titulo }),
+      h('h2', { class: 'ndc-ficha-title' + (String(o.titulo).length > 12 ? ' is-long' : ''), text: o.titulo }),
       o.descripcion ? h('p', { class: 'ndc-ficha-sub', text: o.descripcion }) : null,
       h('div', { class: 'ndc-ficha-meta' },
         o.lugar ? h('span', {}, h('b', { text: o.lugar })) : null, o.direccion ? h('span', { text: o.direccion }) : null,
@@ -1096,6 +1129,9 @@ dash.calc('gastos_categorias', {
           if (bz > 0) barra.append(s('rect', { x: x0 + 0.75, width: bw - 1.5, y: y(ef + bz) + 0.75, height: Math.max(0, y(ef) - y(ef + bz) - 0.75), fill: '#FFE500', stroke: '#15130F', 'stroke-width': 1.5 }));
           sobre.append(s('text', { class: 'ndc-val', x: cx, y: y(f.total) - 7, 'text-anchor': 'middle' }, nf0.format(Math.round(f.total)) + ' €'));
           col.append(barra, sobre);
+        } else if (f.asistentes == null) {
+          col.append(s('rect', { x: x0, width: bw, y: y(0) - 26, height: 26, fill: 'none', stroke: '#A49C84', 'stroke-width': 1.5, 'stroke-dasharray': '2 3', rx: 3 }));
+          col.append(s('text', { x: cx, y: y(0) - 9, 'text-anchor': 'middle', style: 'fill:#6A6558;font-size:11px' }, 'Sin dato'));
         } else {
           const as = f.asistentes || 0;
           if (f.aforo) col.append(s('rect', { x: x0, width: bw, y: y(f.aforo), height: y(0) - y(f.aforo), fill: '#F1EBD9', stroke: '#CFC6AC' }));
