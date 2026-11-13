@@ -56,6 +56,7 @@ html, body { margin: 0; background: #FBF7EC; }
 
 .ndc-card { background: var(--card); border: 1.5px solid var(--ink); border-radius: 14px; padding: 20px 20px 22px; box-shadow: 4px 4px 0 var(--ink); min-width: 0; }
 .ndc-card h3 { font-size: 19px; font-weight: 700; line-height: 1.2; }
+.ndc-top5 { display: inline-block; vertical-align: middle; margin-left: 6px; background: var(--yellow); border: 1.5px solid var(--ink); border-radius: 999px; padding: 1px 8px; font-size: 12px; font-weight: 700; }
 .ndc-hint { color: var(--muted); font-size: 13.5px; margin-top: 3px !important; margin-bottom: 14px !important; }
 .ndc-note { color: var(--muted); font-size: 13px; margin-top: 14px !important; max-width: 70ch; }
 .ndc-empty { color: var(--muted); font-size: 14px; border: 1.5px dashed #CFC6AC; border-radius: 10px; padding: 14px; margin-top: 12px !important; background: #FFFDF6; }
@@ -348,7 +349,7 @@ html, body { margin: 0; background: #FBF7EC; }
     <h2 class="ndc-tape" id="taquilleros"><span>Los más taquilleros</span></h2>
     <div class="ndc-grid ndc-grid-3">
       <article class="ndc-card" id="rk-actores">
-        <h3>Actores</h3>
+        <h3>Actores <span class="ndc-top5">Top 5</span></h3>
         <div class="ndc-controls">
           <div class="ndc-seg" role="group" aria-label="Cómo se ordena" data-for="home-actores" data-ctl="metric">
             <button type="button" data-val="obras" aria-pressed="false">Número de obras</button>
@@ -360,7 +361,7 @@ html, body { margin: 0; background: #FBF7EC; }
         <p class="ndc-note">A cada persona se le atribuye la recaudación completa de las funciones en las que participó: indica en qué funciones estuvo, no cuánto recaudó por sí sola.</p>
       </article>
       <article class="ndc-card" id="rk-tecnicos">
-        <h3>Técnicos</h3>
+        <h3>Técnicos <span class="ndc-top5">Top 5</span></h3>
         <div class="ndc-controls">
           <div class="ndc-seg" role="group" aria-label="Cómo se ordena" data-for="home-tecnicos" data-ctl="metric">
             <button type="button" data-val="obras" aria-pressed="false">Número de obras</button>
@@ -372,7 +373,7 @@ html, body { margin: 0; background: #FBF7EC; }
         <p class="ndc-note">Recaudación de las funciones en las que formó parte del equipo técnico.</p>
       </article>
       <article class="ndc-card" id="rk-directores">
-        <h3>Directores</h3>
+        <h3>Directores <span class="ndc-top5">Top 5</span></h3>
         <div class="ndc-controls">
           <div class="ndc-seg" role="group" aria-label="Cómo se ordena" data-for="home-directores" data-ctl="metric">
             <button type="button" data-val="obras" aria-pressed="false">Número de obras</button>
@@ -523,6 +524,9 @@ const ARCHIVOS = [
   'RECAUDACION_HAMILTON.xlsx',
   'Recaudacion_Luna_Sobre_Buffalo.xlsx',
   'Recaudacion_La_Funcion_que_sale_mal.xlsx',
+  'Recaudacion_Cluedo.xlsx',
+  'Recaudacion_Los_ladrones_somos_gente_honrada.xlsx',
+  'Recaudacion_Ni_Oficio_ni_beneficio.xlsx',
   'TESORERIA.xlsx',
 ];
 
@@ -531,7 +535,7 @@ const ARCHIVOS = [
   let listo = false, cache = {};
 
   /* --- Lector de .xlsx sin librerías: un xlsx es un zip con XML dentro --- */
-  const leeXlsx = async (buffer) => {
+  const leeXlsx = async (buffer, archivo) => {
     const u8 = new Uint8Array(buffer), dv = new DataView(buffer), dec = new TextDecoder();
     let fin = u8.length - 22;
     while (fin >= 0 && dv.getUint32(fin, true) !== 0x06054b50) fin--;
@@ -570,12 +574,12 @@ const ARCHIVOS = [
           let valor = null;
           if (tipo === 'inlineStr') valor = tags(c, 't').map((x) => x.textContent).join('');
           else if (v && v.textContent !== '') valor = tipo === 's' ? cadenas[+v.textContent] : tipo === 'str' || tipo === 'e' ? v.textContent : tipo === 'b' ? v.textContent === '1' : +v.textContent;
-          if (typeof valor === 'string') { valor = valor.trim(); if (valor === '') valor = null; }
+          if (typeof valor === 'string') { valor = valor.replace(/[\u200B-\u200D\u2060\uFEFF]/g, '').replace(/\u00A0/g, ' ').trim(); if (valor === '') valor = null; }
           fila[(col || fila.length + 1) - 1] = valor;
         }
         filas.push(fila);
       }
-      hojas.push({ nombre: s.getAttribute('name'), filas });
+      hojas.push({ nombre: s.getAttribute('name'), archivo: archivo || '', filas });
     }
     return hojas;
   };
@@ -608,11 +612,17 @@ const ARCHIVOS = [
       const col = (...claves) => cab.findIndex((c) => c && claves.some((k) => (k instanceof RegExp ? k.test(c) : c === k)));
       const cSesion = col('sesion', /^sesion\b/), cFecha = col('fecha');
       if (cSesion >= 0 && cFecha >= 0) {                    /* hoja de una obra */
-        const obra = llano(hoja.nombre).replace(/ /g, '-');
+        /* El título sale del nombre de la hoja. Si la hoja se llama "Hoja1" o Excel la cortó
+           (máximo 31 caracteres), se toma del nombre del archivo: Recaudacion_Mi_Obra.xlsx → Mi Obra */
+        const delArchivo = String(hoja.archivo || '').replace(/\.xlsx$/i, '').replace(/^recaudaci[oó]n[\s_-]*/i, '').replace(/[_]+/g, ' ').trim();
+        const generica = /^(hoja|sheet|feuil|blad)\s*\d*$/i.test(String(hoja.nombre).trim());
+        const cortada = delArchivo && llano(delArchivo).length > llano(hoja.nombre).length && llano(delArchivo).startsWith(llano(hoja.nombre));
+        const nombre = (generica || cortada) && delArchivo ? delArchivo : hoja.nombre;
+        const obra = llano(nombre).replace(/ /g, '-');
         const c = { dia: col('dia'), hora: col('hora'), efectivo: col('efectivo'), bizum: col('bizum'), asistentes: col('asistentes', /^asistentes/), aforo: col('aforo'),
           act: cab.map((x, i) => (/^(protagonistas|ensemble|actores|actrices|reparto|elenco)\b/.test(x || '') ? i : -1)).filter((i) => i >= 0), tec: col(/^tecnicos/), dir: col(/^director/, /^direccion/) };
         const pares = cab.map((x, i) => { const m = /^receptor bizum\s*(\d*)$/.exec(x || ''); return m ? { receptor: i, importe: cab.findIndex((y) => y && new RegExp('^recaudacion bizum\\s*' + m[1] + '$').test(y)) } : null; }).filter((x) => x && x.importe >= 0);
-        obras.push({ obra, titulo: titulo(hoja.nombre), descripcion: null, lugar: null, direccion: null });
+        obras.push({ obra, titulo: titulo(nombre), descripcion: null, lugar: null, direccion: null });
         for (const f of cuerpo) {
           const n = numero(f[cSesion]); if (n == null) continue;         /* salta la fila TOTAL */
           let bizum = null;
@@ -659,7 +669,7 @@ const ARCHIVOS = [
         try {
           const r = await fetch('data/' + encodeURIComponent(n), { cache: 'no-store' });
           if (!r.ok) throw new Error('data/' + n + ' (' + r.status + ')');
-          return await leeXlsx(await r.arrayBuffer());
+          return await leeXlsx(await r.arrayBuffer(), n);
         } catch (e) { console.warn('No se pudo leer ' + n, e); return null; }
       }));
       if (libros.some(Boolean)) carga(libros.filter(Boolean)); else aviso(true);
@@ -671,7 +681,7 @@ const ARCHIVOS = [
   const aviso = (ver) => { const a = document.getElementById('ndc-aviso'); if (a) a.hidden = !ver; };
   const entrada = document.getElementById('ndc-archivo');
   if (entrada) entrada.addEventListener('change', async () => {
-    try { carga(await Promise.all([...entrada.files].map(async (f) => leeXlsx(await f.arrayBuffer())))); }
+    try { carga(await Promise.all([...entrada.files].map(async (f) => leeXlsx(await f.arrayBuffer(), f.name)))); }
     catch (e) { console.error(e); alert('No he podido leer ese archivo: ' + e.message); }
   });
 
@@ -733,7 +743,7 @@ dash.calc('obras_stats', {
       primera_fecha: fechas[0] || null, ultima_fecha: fechas[fechas.length - 1] || null,
       funciones_programadas: todas.length, funciones: hechas.length,
       recaudacion, efectivo, bizum, pct_bizum: recaudacion ? bizum / recaudacion * 100 : null,
-      asistentes, aforo, funciones_con_publico: conPublico.length, funciones_con_aforo: conAforo.length, recaudacion_con_publico,
+      asistentes: conPublico.length ? asistentes : null, aforo, funciones_con_publico: conPublico.length, funciones_con_aforo: conAforo.length, recaudacion_con_publico,
       ocupacion: aforo ? suma(conAforo, 'asistentes') / aforo * 100 : null,
       media_funcion: hechas.length ? recaudacion / hechas.length : null,
       por_asistente: asistentes ? recaudacion_con_publico / asistentes : null,
@@ -750,7 +760,7 @@ dash.calc('totales', {
     const hechas = funciones.filter((f) => f.celebrada);
     const conFunciones = obras_stats.filter((o) => o.funciones > 0);
     const recaudacion = obras_stats.reduce((t, o) => t + o.recaudacion, 0);
-    const asistentes = obras_stats.reduce((t, o) => t + o.asistentes, 0);
+    const asistentes = obras_stats.reduce((t, o) => t + (o.asistentes || 0), 0);
     const conPublico = obras_stats.reduce((t, o) => t + o.funciones_con_publico, 0);
     const recConPublico = obras_stats.reduce((t, o) => t + o.recaudacion_con_publico, 0);
     const conOcupacion = hechas.filter((f) => f.ocupacion != null);
@@ -852,7 +862,8 @@ dash.calc('gastos_categorias', {
   const MES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
   const partes = (s) => { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(s || '')); return m ? { y: +m[1], m: +m[2], d: +m[3] } : null; };
   const fecha = (s, conAnio) => { const p = partes(s); return p ? p.d + ' ' + MES[p.m - 1] + (conAnio ? ' ' + p.y : '') : '—'; };
-  const FMT = { media_obra: eur, por_espectador: eur, asistentes_funcion: ent, capacidad_funcion: pct, recaudacion: eur, media_funcion: eur, por_asistente: eur, gasto: eur, beneficio: eur, total: eur, efectivo: eur, bizum: eur, asistentes: ent, funciones: ent, obras: ent, ocupacion: pct };
+  const eur2 = (v) => (v == null ? '—' : nf2.format(v) + ' €');
+  const FMT = { media_obra: eur, por_espectador: eur2, asistentes_funcion: ent, capacidad_funcion: pct, recaudacion: eur, media_funcion: eur, por_asistente: eur2, gasto: eur, beneficio: eur, total: eur, efectivo: eur, bizum: eur, asistentes: ent, funciones: ent, obras: ent, ocupacion: pct };
 
   const h = (tag, props, ...kids) => {
     const e = document.createElement(tag);
@@ -975,11 +986,11 @@ dash.calc('gastos_categorias', {
       if (metrica !== 'media') partes.push(eur(p.media) + ' de media');
       return { nombre: p.persona, valor: metrica === 'obras' ? p.obras : metrica === 'media' ? p.media : p.recaudacion, total: p.recaudacion, sub: partes.join(' · ') };
     }).sort((a, b) => b.valor - a.valor || b.total - a.total || a.nombre.localeCompare(b.nombre, 'es'));
-    if (!filas.length) return el.replaceChildren(h('span', { class: 'ndc-fail', text: 'Aún no hay funciones celebradas.' }));
-    const limite = enObra ? 12 : 6, clave = el.id + '-' + grupo, todo = N.more.has(clave), n = filas.length;
+    if (!filas.length) return el.replaceChildren(h('span', { class: 'ndc-fail', text: dash.data('funciones').data.some((f) => f.celebrada && (!enObra || f.obra === N.obra)) ? 'No hay nadie anotado en este grupo.' : 'Aún no hay funciones celebradas.' }));
+    const limite = enObra ? 12 : 5, clave = el.id + '-' + grupo, todo = N.more.has(clave), n = filas.length;
     const fmt = metrica === 'obras' ? (v) => plural(v, 'obra', 'obras') : eur;
     const kids = [ranking(todo ? filas : filas.slice(0, limite), { fmt, max: Math.max(...filas.map((f) => f.valor)) })];
-    if (n > limite) {
+    if (enObra && n > limite) {
       const b = h('button', { type: 'button', class: 'ndc-more', text: todo ? 'Ver menos' : 'Ver los ' + n });
       b.addEventListener('click', () => { todo ? N.more.delete(clave) : N.more.add(clave); dash.draw('rank-personas'); });
       kids.push(b);

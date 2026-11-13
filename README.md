@@ -10,7 +10,7 @@ assets/      Logo, icono y carteles (assets/carteles/<obra>.jpg)
 
 **Uno por obra** (por ejemplo `RECAUDACION_HAMILTON.xlsx`), con el formato de siempre: Sesión, Fecha, Día, Hora, Total, Efectivo, Bizum, Receptor Bizum 1, Recaudación Bizum 1, Receptor Bizum 2, Recaudación Bizum 2, Asistentes, Recaudación por asistente, Aforo, Capacidad, Protagonistas de la sesión, Técnicos, Director.
 
-- El nombre de la hoja es el título de la obra.
+- El nombre de la hoja es el título de la obra. Si la hoja se llama "Hoja1" o el nombre está cortado (Excel admite 31 caracteres), el título se toma del nombre del archivo: `Recaudacion_Ni_Oficio_ni_beneficio.xlsx` → Ni Oficio ni beneficio.
 - Los actores van en "Protagonistas de la sesión" (también vale una columna "Actores" o "Ensemble"; se suman todos como actores). Nombres separados por punto y coma.
 - Una función sin Efectivo ni Asistentes cuenta como pendiente. La fila TOTAL se ignora.
 - Si una función tiene donaciones pero Asistentes o Aforo vacíos o "n/a", su dinero cuenta en la recaudación, pero no en asistentes, ocupación ni euros por espectador.
@@ -30,6 +30,9 @@ assets/      Logo, icono y carteles (assets/carteles/<obra>.jpg)
      'RECAUDACION_HAMILTON.xlsx',
      'Recaudacion_Luna_Sobre_Buffalo.xlsx',
      'Recaudacion_La_Funcion_que_sale_mal.xlsx',
+     'Recaudacion_Cluedo.xlsx',
+     'Recaudacion_Los_ladrones_somos_gente_honrada.xlsx',
+     'Recaudacion_Ni_Oficio_ni_beneficio.xlsx',
      'Recaudacion_Nueva_Obra.xlsx',   // la nueva
      'TESORERIA.xlsx',
    ];
