@@ -14,7 +14,8 @@ assets/      Logo, icono y carteles (assets/carteles/<obra>.jpg)
 - Los actores van en "Protagonistas de la sesión" (también vale una columna "Actores" o "Ensemble"; se suman todos como actores). Nombres separados por punto y coma.
 - Una función sin Efectivo ni Asistentes cuenta como pendiente. La fila TOTAL se ignora.
 - Si una función tiene donaciones pero Asistentes o Aforo vacíos o "n/a", su dinero cuenta en la recaudación, pero no en asistentes, ocupación ni euros por espectador.
-- El panel calcula con Efectivo y las columnas "Recaudación Bizum", así que las fórmulas del Excel no le afectan. Se pueden añadir parejas "Receptor Bizum 3 / Recaudación Bizum 3".
+- **Métodos de pago.** Desde Hamilton el formato incluye también las columnas TPV y QR, y "Bizum" pasa a llamarse "Digital" (Bizum + TPV + QR). Los dos formatos funcionan: las obras sin TPV ni QR siguen mostrando solo efectivo y Bizum, y en las que sí los tienen aparecen sus columnas, colores y comparativas.
+- El panel calcula con Efectivo, TPV, QR y las columnas "Recaudación Bizum", así que las fórmulas del Excel no le afectan. Se pueden añadir parejas "Receptor Bizum 3 / Recaudación Bizum 3".
 
 **`TESORERIA.xlsx`**, con dos hojas:
 

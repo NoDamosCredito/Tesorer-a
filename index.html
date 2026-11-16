@@ -165,6 +165,7 @@ html, body { margin: 0; background: #FBF7EC; }
 .ndc-legend span { display: inline-flex; align-items: center; gap: 6px; }
 .ndc-sw { width: 14px; height: 14px; border-radius: 3px; display: inline-block; border: 1.5px solid var(--ink); }
 .ndc-sw-ef { background: var(--ink); } .ndc-sw-bz { background: var(--yellow); }
+.ndc-sw-tpv { background: var(--amber); } .ndc-sw-qr { background: repeating-linear-gradient(45deg, var(--ink) 0 2px, #fff 2px 5px); }
 .ndc-sw-pend { background: transparent; border: 1.5px dashed #A49C84; } .ndc-sw-aforo { background: #F1EBD9; border-color: #CFC6AC; }
 .ndc-chart { position: relative; min-height: 320px; overflow-x: auto; overflow-y: hidden; }
 .ndc-chart svg { display: block; width: 100%; height: auto; }
@@ -199,7 +200,17 @@ html, body { margin: 0; background: #FBF7EC; }
 /* ---------- efectivo / bizum ---------- */
 .ndc-split-bar { display: flex; height: 44px; border: 1.5px solid var(--ink); border-radius: 8px; overflow: hidden; background: #F1EBD9; }
 .ndc-split-bar i { display: block; height: 100%; width: 0; transition: width 1s cubic-bezier(.2,.8,.2,1); }
-.ndc-split-bar .is-ef { background: var(--ink); } .ndc-split-bar .is-bz { background: var(--yellow); border-left: 1.5px solid var(--ink); }
+.ndc-split-bar .is-ef { background: var(--ink); } .ndc-split-bar .is-bz { background: var(--yellow); }
+.ndc-split-bar .is-tpv { background: var(--amber); } .ndc-split-bar .is-qr { background: repeating-linear-gradient(45deg, var(--ink) 0 2px, #fff 2px 6px); }
+.ndc-split-bar i + i { border-left: 1.5px solid var(--ink); }
+.ndc-split-legend b.is-small { font-size: 26px; }
+.ndc-split-note { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); display: grid; gap: 8px; font-size: 14px; }
+.ndc-split-note p { color: var(--muted); }
+.ndc-split-note .ndc-cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ndc-split-note .ndc-cmp div { background: #FFFDF6; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; }
+.ndc-split-note .ndc-cmp span { display: block; color: var(--muted); font-size: 12.5px; }
+.ndc-split-note .ndc-cmp b { font-size: 18px; font-variant-numeric: tabular-nums; }
+.ndc-table.sin-digital .ndc-col-dig { display: none; }
 .ndc-split-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
 .ndc-split-legend div span { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 13.5px; }
 .ndc-split-legend div b { display: block; font-family: var(--display); font-weight: 400; font-size: 34px; line-height: 1.1; font-variant-numeric: tabular-nums; }
@@ -421,19 +432,11 @@ html, body { margin: 0; background: #FBF7EC; }
           <h3>Desglose por sesión</h3>
           <div class="ndc-seg" role="group" aria-label="Qué se muestra" data-for="obra-sesiones" data-ctl="metric">
             <button type="button" data-val="recaudacion" aria-pressed="true">Recaudación</button>
+            <button type="button" data-val="mix" aria-pressed="false" id="boton-mix">Métodos de pago (%)</button>
             <button type="button" data-val="asistentes" aria-pressed="false">Asistentes</button>
           </div>
         </div>
-        <div class="ndc-legend" id="leyenda-recaudacion">
-          <span><i class="ndc-sw ndc-sw-ef"></i>Efectivo</span>
-          <span><i class="ndc-sw ndc-sw-bz"></i>Bizum</span>
-          <span><i class="ndc-sw ndc-sw-pend"></i>Función pendiente</span>
-        </div>
-        <div class="ndc-legend" id="leyenda-asistentes" hidden>
-          <span><i class="ndc-sw ndc-sw-ef"></i>Asistentes</span>
-          <span><i class="ndc-sw ndc-sw-aforo"></i>Aforo de la sala</span>
-          <span><i class="ndc-sw ndc-sw-pend"></i>Función pendiente</span>
-        </div>
+        <div class="ndc-legend" id="leyenda-sesiones"></div>
         <div class="ndc-chart" id="obra-sesiones" data-draw="obra-sesiones" data-source="funciones">—</div>
       </article>
 
@@ -446,6 +449,7 @@ html, body { margin: 0; background: #FBF7EC; }
               <option value="asistentes">Asistentes</option>
               <option value="ocupacion">Ocupación</option>
               <option value="por_asistente">Euros por espectador</option>
+              <option value="digital" class="ndc-col-dig">Pagos con TPV y QR</option>
               <option value="sesion">Orden de calendario</option>
             </select>
           </label>
@@ -459,6 +463,8 @@ html, body { margin: 0; background: #FBF7EC; }
                 <th data-field="total" class="ndc-num">Recaudación</th>
                 <th data-field="efectivo" class="ndc-num">Efectivo</th>
                 <th data-field="bizum" class="ndc-num">Bizum</th>
+                <th data-field="tpv" class="ndc-num ndc-col-dig">TPV</th>
+                <th data-field="qr" class="ndc-num ndc-col-dig">QR</th>
                 <th data-field="asistentes" class="ndc-num">Asistentes</th>
                 <th data-field="ocupacion" class="ndc-num">Ocupación</th>
                 <th data-field="por_asistente" class="ndc-num">Por espectador</th>
@@ -472,7 +478,7 @@ html, body { margin: 0; background: #FBF7EC; }
       <h2 class="ndc-tape" id="obra-dinero-titulo"><span>De dónde viene y adónde va</span></h2>
       <div class="ndc-grid ndc-grid-3">
         <article class="ndc-card" id="obra-efectivo-bizum">
-          <h3>Efectivo frente a Bizum</h3>
+          <h3>Métodos de pago</h3>
           <p class="ndc-hint">Reparto de las donaciones según cómo se entregaron.</p>
           <div data-draw="obra-split" data-source="obras_stats">—</div>
         </article>
@@ -619,7 +625,8 @@ const ARCHIVOS = [
         const cortada = delArchivo && llano(delArchivo).length > llano(hoja.nombre).length && llano(delArchivo).startsWith(llano(hoja.nombre));
         const nombre = (generica || cortada) && delArchivo ? delArchivo : hoja.nombre;
         const obra = llano(nombre).replace(/ /g, '-');
-        const c = { dia: col('dia'), hora: col('hora'), efectivo: col('efectivo'), bizum: col('bizum'), asistentes: col('asistentes', /^asistentes/), aforo: col('aforo'),
+        const c = { dia: col('dia'), hora: col('hora'), efectivo: col('efectivo'), bizum: col('bizum'), digital: col('digital'),
+          tpv: col('tpv', /^tpv\b/, /^tarjeta/, /^datafono/), qr: col('qr', /^qr\b/, /^pasarela/, /^pago online/), asistentes: col('asistentes', /^asistentes/), aforo: col('aforo'),
           act: cab.map((x, i) => (/^(protagonistas|ensemble|actores|actrices|reparto|elenco)\b/.test(x || '') ? i : -1)).filter((i) => i >= 0), tec: col(/^tecnicos/), dir: col(/^director/, /^direccion/) };
         const pares = cab.map((x, i) => { const m = /^receptor bizum\s*(\d*)$/.exec(x || ''); return m ? { receptor: i, importe: cab.findIndex((y) => y && new RegExp('^recaudacion bizum\\s*' + m[1] + '$').test(y)) } : null; }).filter((x) => x && x.importe >= 0);
         obras.push({ obra, titulo: titulo(nombre), descripcion: null, lugar: null, direccion: null });
@@ -627,11 +634,15 @@ const ARCHIVOS = [
           const n = numero(f[cSesion]); if (n == null) continue;         /* salta la fila TOTAL */
           let bizum = null;
           for (const par of pares) { const imp = numero(f[par.importe]); if (imp == null) continue; bizum = (bizum || 0) + imp; if (imp && f[par.receptor]) { bizums.push({ obra, sesion: n, receptor: String(f[par.receptor]), importe: imp }); anota(String(f[par.receptor])); } }
-          if (bizum == null && !pares.length && c.bizum >= 0) bizum = numero(f[c.bizum]);
           const efectivo = c.efectivo >= 0 ? numero(f[c.efectivo]) : null;
-          if (bizum == null && efectivo != null) bizum = 0;
+          const tpv = c.tpv >= 0 ? numero(f[c.tpv]) : null, qr = c.qr >= 0 ? numero(f[c.qr]) : null;
+          /* Bizum: las columnas "Recaudación Bizum"; si no las hay, la columna Bizum;
+             y si solo hay "Digital" (Bizum + TPV + QR), lo que queda al restar TPV y QR */
+          if (bizum == null && c.bizum >= 0) bizum = numero(f[c.bizum]);
+          if (bizum == null && c.digital >= 0 && numero(f[c.digital]) != null) bizum = Math.max(0, Math.round((numero(f[c.digital]) - (tpv || 0) - (qr || 0)) * 100) / 100);
+          if (bizum == null && (efectivo != null || tpv != null || qr != null)) bizum = 0;
           const fila = { obra, sesion: n, fecha: aFecha(f[cFecha]), dia: c.dia >= 0 ? f[c.dia] : null, hora: c.hora >= 0 ? aHora(f[c.hora]) : null,
-            efectivo, bizum, asistentes: c.asistentes >= 0 ? numero(f[c.asistentes]) : null, aforo: c.aforo >= 0 ? numero(f[c.aforo]) : null,
+            efectivo, bizum, tpv, qr, asistentes: c.asistentes >= 0 ? numero(f[c.asistentes]) : null, aforo: c.aforo >= 0 ? numero(f[c.aforo]) : null,
             actores: c.act.flatMap((i) => lista(f[i])), tecnicos: c.tec >= 0 ? lista(f[c.tec]) : [], director: c.dir >= 0 ? lista(f[c.dir]) : [] };
           [...fila.actores, ...fila.tecnicos, ...fila.director].forEach(anota);
           sesiones.push(fila);
@@ -704,16 +715,16 @@ const ARCHIVOS = [
 /* ===== Cálculos: todo número que no viene tal cual de los ficheros se obtiene aquí ===== */
 dash.calc('funciones', {
   title: 'Funciones con sus totales',
-  description: 'Cada función con su recaudación total (efectivo más Bizum), su ocupación y lo recaudado por espectador. Una función sin datos anotados cuenta como pendiente.',
+  description: 'Cada función con su recaudación total (efectivo, Bizum, TPV y QR), su ocupación y lo recaudado por espectador. Una función sin datos anotados cuenta como pendiente.',
   inputs: ['sesiones'],
   fn: (sesiones) => sesiones.map((s) => {
     const num = (v) => (v == null || v === '' || isNaN(+v) ? null : +v);
-    const efectivo = num(s.efectivo), bizum = num(s.bizum), asistentes = num(s.asistentes), aforo = num(s.aforo);
-    const celebrada = efectivo != null || bizum != null || asistentes != null;
-    const total = celebrada ? Math.round(((efectivo || 0) + (bizum || 0)) * 100) / 100 : null;
+    const efectivo = num(s.efectivo), bizum = num(s.bizum), tpv = num(s.tpv), qr = num(s.qr), asistentes = num(s.asistentes), aforo = num(s.aforo);
+    const celebrada = efectivo != null || bizum != null || tpv != null || qr != null || asistentes != null;
+    const total = celebrada ? Math.round(((efectivo || 0) + (bizum || 0) + (tpv || 0) + (qr || 0)) * 100) / 100 : null;
     return {
       obra: s.obra, sesion: +s.sesion, fecha: s.fecha, dia: s.dia, hora: s.hora, celebrada,
-      efectivo, bizum, total, asistentes, aforo,
+      efectivo, bizum, tpv, qr, total, asistentes, aforo,
       ocupacion: asistentes != null && aforo ? asistentes / aforo * 100 : null,
       por_asistente: total != null && asistentes ? total / asistentes : null,
     };
@@ -730,7 +741,7 @@ dash.calc('obras_stats', {
     const todas = funciones.filter((f) => f.obra === o.obra);
     const hechas = todas.filter((f) => f.celebrada);
     const fechas = todas.map((f) => f.fecha).filter(Boolean).sort();
-    const recaudacion = suma(hechas, 'total'), efectivo = suma(hechas, 'efectivo'), bizum = suma(hechas, 'bizum');
+    const recaudacion = suma(hechas, 'total'), efectivo = suma(hechas, 'efectivo'), bizum = suma(hechas, 'bizum'), tpv = suma(hechas, 'tpv'), qr = suma(hechas, 'qr');
     /* Asistentes, ocupación y euros por espectador solo cuentan funciones con asistentes anotados
        (y la ocupación, además, con aforo), para no mezclar dinero o butacas sin su público */
     const conPublico = hechas.filter((f) => f.asistentes != null), conAforo = conPublico.filter((f) => f.aforo);
@@ -742,7 +753,7 @@ dash.calc('obras_stats', {
       obra: o.obra, titulo: o.titulo, descripcion: o.descripcion, lugar: o.lugar, direccion: o.direccion,
       primera_fecha: fechas[0] || null, ultima_fecha: fechas[fechas.length - 1] || null,
       funciones_programadas: todas.length, funciones: hechas.length,
-      recaudacion, efectivo, bizum, pct_bizum: recaudacion ? bizum / recaudacion * 100 : null,
+      recaudacion, efectivo, bizum, tpv, qr, pct_bizum: recaudacion ? bizum / recaudacion * 100 : null,
       asistentes: conPublico.length ? asistentes : null, aforo, funciones_con_publico: conPublico.length, funciones_con_aforo: conAforo.length, recaudacion_con_publico,
       ocupacion: aforo ? suma(conAforo, 'asistentes') / aforo * 100 : null,
       media_funcion: hechas.length ? recaudacion / hechas.length : null,
@@ -856,14 +867,22 @@ dash.calc('gastos_categorias', {
   const nf0 = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 0 });
   const nf1 = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
   const nf2 = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  const eur = (v) => (v == null ? '—' : (Math.abs(v - Math.round(v)) < 0.005 ? nf0.format(v) : nf2.format(v)) + ' €');
+  const eur = (v) => (v == null ? '—' : (Math.abs(v - Math.round(v)) < 0.005 ? nf0.format(v) : nf2.format(v)) + '\u00a0€');
   const ent = (v) => (v == null ? '—' : nf0.format(v));
   const pct = (v) => (v == null ? '—' : nf1.format(v) + ' %');
   const MES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
   const partes = (s) => { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(s || '')); return m ? { y: +m[1], m: +m[2], d: +m[3] } : null; };
   const fecha = (s, conAnio) => { const p = partes(s); return p ? p.d + ' ' + MES[p.m - 1] + (conAnio ? ' ' + p.y : '') : '—'; };
-  const eur2 = (v) => (v == null ? '—' : nf2.format(v) + ' €');
-  const FMT = { media_obra: eur, por_espectador: eur2, asistentes_funcion: ent, capacidad_funcion: pct, recaudacion: eur, media_funcion: eur, por_asistente: eur2, gasto: eur, beneficio: eur, total: eur, efectivo: eur, bizum: eur, asistentes: ent, funciones: ent, obras: ent, ocupacion: pct };
+  const eur2 = (v) => (v == null ? '—' : nf2.format(v) + '\u00a0€');
+  /* Métodos de pago, de abajo arriba en las barras. TPV y QR solo aparecen en las obras que los usan */
+  const METODOS = [
+    { k: 'efectivo', nombre: 'Efectivo', sw: 'ndc-sw-ef', fill: '#15130F' },
+    { k: 'bizum', nombre: 'Bizum', sw: 'ndc-sw-bz', fill: '#FFE500' },
+    { k: 'tpv', nombre: 'TPV (tarjeta)', sw: 'ndc-sw-tpv', fill: '#E9A31C' },
+    { k: 'qr', nombre: 'QR online', sw: 'ndc-sw-qr', fill: 'url(#ndc-rayas)' },
+  ];
+  const metodosDe = (filas) => METODOS.filter((m) => m.k === 'efectivo' || filas.some((f) => (f[m.k] || 0) > 0));
+  const FMT = { media_obra: eur, por_espectador: eur2, asistentes_funcion: ent, capacidad_funcion: pct, recaudacion: eur, media_funcion: eur, por_asistente: eur2, gasto: eur, beneficio: eur, total: eur, efectivo: eur, bizum: eur, tpv: eur, qr: eur, asistentes: ent, funciones: ent, obras: ent, ocupacion: pct };
 
   const h = (tag, props, ...kids) => {
     const e = document.createElement(tag);
@@ -1087,17 +1106,32 @@ dash.calc('gastos_categorias', {
     const st = estado(['funciones']); if (st !== 'ok') return espera(el, st);
     const filas = dash.data('funciones').data.filter((f) => f.obra === N.obra).sort((a, b) => a.sesion - b.sesion);
     if (!filas.length) return el.replaceChildren(h('span', { class: 'ndc-fail', text: 'Esta obra aún no tiene funciones anotadas.' }));
-    const modo = ctl('obra-sesiones', 'metric', 'recaudacion');
+    const usados = metodosDe(filas.filter((f) => f.celebrada));
+    /* "Métodos de pago (%)" solo tiene sentido si la obra usó más de un método */
+    const botonMix = document.getElementById('boton-mix');
+    if (botonMix) botonMix.hidden = usados.length < 2;
+    let modo = ctl('obra-sesiones', 'metric', 'recaudacion');
+    if (modo === 'mix' && usados.length < 2) {
+      modo = 'recaudacion';
+      document.querySelectorAll('.ndc-seg[data-for="obra-sesiones"] button').forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.val === 'recaudacion')));
+    }
+    const leyenda = document.getElementById('leyenda-sesiones');
+    if (leyenda) {
+      const pieza = (cls, texto) => h('span', {}, h('i', { class: 'ndc-sw ' + cls }), texto);
+      leyenda.replaceChildren(...(modo === 'asistentes'
+        ? [pieza('ndc-sw-ef', 'Asistentes'), pieza('ndc-sw-aforo', 'Aforo de la sala')]
+        : usados.map((m) => pieza(m.sw, m.nombre))), pieza('ndc-sw-pend', 'Función pendiente'));
+    }
     const animar = primera('sesiones-' + N.obra + '-' + modo);
     const ancho = el.clientWidth || 600, W = Math.max(ancho, filas.length * 50 + 60), H = 320, desliza = W > ancho + 1;
     const mayor = (campo) => Math.max(0, ...filas.map((f) => f[campo] || 0));
-    const bruto = modo === 'recaudacion' ? (mayor('total') || 1) * 1.14 : Math.max(mayor('aforo') || 1, mayor('asistentes')) * 1.1;
+    const bruto = modo === 'mix' ? 100 : modo === 'recaudacion' ? (mayor('total') || 1) * 1.14 : Math.max(mayor('aforo') || 1, mayor('asistentes')) * 1.1;
     /* Eje con marcas redondas (1, 2 o 5 por potencia de diez) que siempre empieza en cero */
-    let paso = Math.pow(10, Math.floor(Math.log10(bruto / 4)));
-    const resto = bruto / 4 / paso; paso *= resto >= 7.07 ? 10 : resto >= 3.16 ? 5 : resto >= 1.41 ? 2 : 1;
+    let paso = modo === 'mix' ? 25 : Math.pow(10, Math.floor(Math.log10(bruto / 4)));
+    const resto = bruto / 4 / paso; if (modo !== 'mix') paso *= resto >= 7.07 ? 10 : resto >= 3.16 ? 5 : resto >= 1.41 ? 2 : 1;
     const tope = Math.ceil(bruto / paso) * paso, ticks = [];
     for (let v = 0; v <= tope + paso / 2; v += paso) ticks.push(v);
-    const fmtTick = (v) => (modo === 'recaudacion' ? nf0.format(v) + ' €' : nf0.format(v));
+    const fmtTick = (v) => (modo === 'recaudacion' ? nf0.format(v) + ' €' : modo === 'mix' ? nf0.format(v) + ' %' : nf0.format(v));
     const ml = Math.max(...ticks.map((t) => fmtTick(t).length)) * 7 + 14, mr = 6, mt = 26, mb = 46;
     const y = (v) => H - mb - (v / tope) * (H - mb - mt);
     const tramo = (W - mr - ml) / filas.length, bw = tramo * 0.68;
@@ -1108,8 +1142,11 @@ dash.calc('gastos_categorias', {
       return e;
     };
     const svg = s('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img',
-      'aria-label': modo === 'recaudacion' ? 'Recaudación de cada función, separando efectivo y Bizum' : 'Asistentes de cada función frente al aforo de la sala' });
+      'aria-label': modo === 'recaudacion' ? 'Recaudación de cada función, separada por método de pago' : modo === 'mix' ? 'Porcentaje de cada método de pago en cada función' : 'Asistentes de cada función frente al aforo de la sala' });
     if (desliza) { svg.style.width = W + 'px'; svg.style.maxWidth = 'none'; }
+    const defs = s('defs'), rayas = s('pattern', { id: 'ndc-rayas', width: 6, height: 6, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' });
+    rayas.append(s('rect', { width: 6, height: 6, fill: '#FFFFFF' }), s('rect', { width: 2.2, height: 6, fill: '#15130F' }));
+    defs.append(rayas); svg.append(defs);
     for (const t of ticks) {
       svg.append(s('line', { class: 'ndc-grid-line', x1: ml, x2: W - mr, y1: y(t), y2: y(t) }));
       svg.append(s('text', { class: 'ndc-tick', x: ml - 8, y: y(t) + 4, 'text-anchor': 'end' }, fmtTick(t)));
@@ -1120,7 +1157,7 @@ dash.calc('gastos_categorias', {
     const oculta = () => tip.classList.remove('is-on');
     const muestra = (f, cx) => {
       tip.replaceChildren(h('strong', { text: 'Función ' + f.sesion + ' · ' + (f.dia || '') + ' ' + fecha(f.fecha) + ' · ' + (f.hora || '') }),
-        ...(f.celebrada ? [linea('Recaudación', eur(f.total)), linea('Efectivo', eur(f.efectivo)), linea('Bizum', eur(f.bizum)), linea('Asistentes', ent(f.asistentes) + ' de ' + ent(f.aforo)), linea('Ocupación', pct(f.ocupacion)), linea('Por espectador', eur(f.por_asistente))]
+        ...(f.celebrada ? [linea('Recaudación', eur(f.total)), ...usados.map((m) => linea(m.nombre, eur(f[m.k] || 0) + (f.total ? ' · ' + nf0.format((f[m.k] || 0) / f.total * 100) + ' %' : ''))), linea('Asistentes', ent(f.asistentes) + ' de ' + ent(f.aforo)), linea('Ocupación', pct(f.ocupacion)), linea('Por espectador', eur(f.por_asistente))]
           : [linea('Estado', 'Pendiente'), linea('Aforo', ent(f.aforo))]));
       const visto = el.clientWidth || W, k = desliza ? 1 : visto / W, tw = tip.offsetWidth || 200, medio = tramo * k / 2 + 6;
       const izq = el.scrollLeft, der = izq + visto, px = cx * k;
@@ -1134,11 +1171,18 @@ dash.calc('gastos_categorias', {
       if (f.celebrada) {
         const barra = s('g', { class: animar ? 'ndc-grow' : '', style: retardo });   /* la barra crece desde cero como una pieza */
         const sobre = s('g', { class: animar ? 'ndc-fade' : '', style: 'animation-delay:' + (i * 70 + 450) + 'ms' });
-        if (modo === 'recaudacion') {
-          const ef = f.efectivo || 0, bz = f.bizum || 0;
-          barra.append(s('rect', { x: x0, width: bw, y: y(ef), height: y(0) - y(ef), fill: '#15130F' }));
-          if (bz > 0) barra.append(s('rect', { x: x0 + 0.75, width: bw - 1.5, y: y(ef + bz) + 0.75, height: Math.max(0, y(ef) - y(ef + bz) - 0.75), fill: '#FFE500', stroke: '#15130F', 'stroke-width': 1.5 }));
-          sobre.append(s('text', { class: 'ndc-val', x: cx, y: y(f.total) - 7, 'text-anchor': 'middle' }, nf0.format(Math.round(f.total)) + ' €'));
+        if (modo === 'recaudacion' || modo === 'mix') {
+          /* Pila de métodos: en euros, o en porcentaje de lo recaudado en la función */
+          const escala = modo === 'mix' ? (f.total ? 100 / f.total : 0) : 1;
+          let base = 0;
+          for (const m of usados) {
+            const v = (f[m.k] || 0) * escala; if (v <= 0) continue;
+            const borde = m.k !== 'efectivo';
+            barra.append(s('rect', { x: x0 + (borde ? 0.75 : 0), width: bw - (borde ? 1.5 : 0), y: y(base + v) + (borde ? 0.75 : 0), height: Math.max(0, y(base) - y(base + v) - (borde ? 0.75 : 0)), fill: m.fill, stroke: borde ? '#15130F' : null, 'stroke-width': borde ? 1.5 : null }));
+            base += v;
+          }
+          if (modo === 'recaudacion') sobre.append(s('text', { class: 'ndc-val', x: cx, y: y(f.total) - 7, 'text-anchor': 'middle' }, nf0.format(Math.round(f.total)) + ' €'));
+          else if (f.total) { const sinEf = 100 - (f.efectivo || 0) / f.total * 100; sobre.append(s('text', { class: 'ndc-val', x: cx, y: y(100) - 7, 'text-anchor': 'middle', style: 'font-size:12px' }, nf0.format(sinEf) + (tramo > 90 ? ' % sin efectivo' : ' %'))); }
           col.append(barra, sobre);
         } else if (f.asistentes == null) {
           col.append(s('rect', { x: x0, width: bw, y: y(0) - 26, height: 26, fill: 'none', stroke: '#A49C84', 'stroke-width': 1.5, 'stroke-dasharray': '2 3', rx: 3 }));
@@ -1147,8 +1191,11 @@ dash.calc('gastos_categorias', {
           const as = f.asistentes || 0;
           if (f.aforo) col.append(s('rect', { x: x0, width: bw, y: y(f.aforo), height: y(0) - y(f.aforo), fill: '#F1EBD9', stroke: '#CFC6AC' }));
           barra.append(s('rect', { x: x0, width: bw, y: y(as), height: y(0) - y(as), fill: '#15130F' }));
-          sobre.append(s('text', { class: 'ndc-val', x: cx, y: y(as) + 20, 'text-anchor': 'middle', style: 'fill:#FFFDF3;font-size:15px' }, nf0.format(as)));
-          if (f.ocupacion != null) sobre.append(s('text', { x: cx, y: y(as) + 36, 'text-anchor': 'middle', style: 'fill:#FFFDF3;font-size:12px' }, nf0.format(f.ocupacion) + ' %'));
+          /* Más público que aforo: se marca el aforo encima de la barra para que se vea que lo supera */
+          if (f.aforo && as > f.aforo) sobre.append(s('line', { x1: x0 - 4, x2: x0 + bw + 4, y1: y(f.aforo), y2: y(f.aforo), stroke: '#E9A31C', 'stroke-width': 3, 'stroke-dasharray': '6 3' }));
+          const techo = f.aforo && as > f.aforo ? y(f.aforo) + 4 : y(as);   /* las cifras, por debajo de la marca de aforo */
+          sobre.append(s('text', { class: 'ndc-val', x: cx, y: techo + 20, 'text-anchor': 'middle', style: 'fill:#FFFDF3;font-size:15px' }, nf0.format(as)));
+          if (f.ocupacion != null) sobre.append(s('text', { x: cx, y: techo + 36, 'text-anchor': 'middle', style: 'fill:#FFFDF3;font-size:12px' }, nf0.format(f.ocupacion) + ' %'));
           col.append(barra, sobre);
         }
       } else {
@@ -1168,32 +1215,63 @@ dash.calc('gastos_categorias', {
 
   dash.draw('obra-tabla', (el) => {
     const st = estado(['funciones']); if (st !== 'ok') return espera(el, st);
-    const sel = document.getElementById('orden-sesiones'), campo = (sel && sel.value) || 'total';
-    const todas = dash.data('funciones').data.filter((f) => f.obra === N.obra);
+    const sel = document.getElementById('orden-sesiones');
+    const todas = dash.data('funciones').data.filter((f) => f.obra === N.obra).map((f) => ({ ...f, digital: f.celebrada ? (f.tpv || 0) + (f.qr || 0) : null }));
+    let campo = (sel && sel.value) || 'total';
+    if (campo === 'digital' && !todas.some((f) => (f.tpv || 0) > 0 || (f.qr || 0) > 0)) { campo = 'total'; if (sel) sel.value = 'total'; }
     const hechas = todas.filter((f) => f.celebrada).sort((a, b) => (campo === 'sesion' ? a.sesion - b.sesion : (b[campo] || 0) - (a[campo] || 0) || a.sesion - b.sesion));
     const pend = todas.filter((f) => !f.celebrada).sort((a, b) => a.sesion - b.sesion);
     const nombre = (f) => String(f.dia || '') + ' ' + fecha(f.fecha) + ' · ' + (f.hora || '');
     const td = (text, cls) => h('td', { class: cls, text });
-    const orden = ['sesion', 'total', 'efectivo', 'bizum', 'asistentes', 'ocupacion', 'por_asistente'];
+    const conDigital = todas.some((f) => (f.tpv || 0) > 0 || (f.qr || 0) > 0);
+    const tabla = el.closest('table'); if (tabla) tabla.classList.toggle('sin-digital', !conDigital);
+    const sel2 = document.getElementById('orden-sesiones');
+    if (sel2) { const op = sel2.querySelector('option[value="digital"]'); if (op) op.hidden = !conDigital; }
+    const orden = ['sesion', 'total', 'efectivo', 'bizum', 'tpv', 'qr', 'asistentes', 'ocupacion', 'por_asistente'];
     el.replaceChildren(
       ...hechas.map((f, i) => {
         const puesto = campo === 'sesion' ? '·' : String(1 + hechas.filter((g) => (g[campo] || 0) > (f[campo] || 0) + 1e-9).length);
-        const celdas = [td(nombre(f)), td(eur(f.total), 'ndc-num'), td(eur(f.efectivo), 'ndc-num'), td(eur(f.bizum), 'ndc-num'), td(ent(f.asistentes), 'ndc-num'), td(pct(f.ocupacion), 'ndc-num'), td(eur(f.por_asistente), 'ndc-num')];
+        const celdas = [td(nombre(f)), td(eur(f.total), 'ndc-num'), td(eur(f.efectivo), 'ndc-num'), td(eur(f.bizum), 'ndc-num'), td(f.tpv == null ? '—' : eur(f.tpv), 'ndc-num ndc-col-dig'), td(f.qr == null ? '—' : eur(f.qr), 'ndc-num ndc-col-dig'), td(ent(f.asistentes), 'ndc-num'), td(pct(f.ocupacion), 'ndc-num'), td(eur(f.por_asistente), 'ndc-num')];
         const k = orden.indexOf(campo); if (k > 0) celdas[k].classList.add('is-sorted');
+        if (campo === 'digital') { celdas[4].classList.add('is-sorted'); celdas[5].classList.add('is-sorted'); }
         return h('tr', { class: campo !== 'sesion' && puesto === '1' ? 'is-first' : '', 'data-key': encodeURIComponent(f.obra) + ',' + f.sesion }, td(puesto, 'ndc-td-pos'), celdas);
       }),
-      ...pend.map((f) => h('tr', { class: 'is-pend', 'data-key': encodeURIComponent(f.obra) + ',' + f.sesion }, td('', 'ndc-td-pos'), td(nombre(f)), td('Pendiente', 'ndc-num'), td('', 'ndc-num'), td('', 'ndc-num'), td('', 'ndc-num'), td('', 'ndc-num'), td('', 'ndc-num'))));
+      ...pend.map((f) => h('tr', { class: 'is-pend', 'data-key': encodeURIComponent(f.obra) + ',' + f.sesion }, td('', 'ndc-td-pos'), td(nombre(f)), td('Pendiente', 'ndc-num'), td('', 'ndc-num'), td('', 'ndc-num'), td('', 'ndc-num ndc-col-dig'), td('', 'ndc-num ndc-col-dig'), td('', 'ndc-num'), td('', 'ndc-num'), td('', 'ndc-num'))));
   });
 
   dash.draw('obra-split', (el) => {
-    const st = estado(['obras_stats']); if (st !== 'ok') return espera(el, st);
+    const st = estado(['obras_stats', 'funciones']); if (st !== 'ok') return espera(el, st);
     const o = obraActual(); if (!o || !o.recaudacion) return el.replaceChildren(h('span', { class: 'ndc-fail', text: 'Aún no hay recaudación anotada.' }));
-    const pb = o.pct_bizum, pe = 100 - pb;
-    el.replaceChildren(
-      h('div', { class: 'ndc-split-bar', role: 'img', 'aria-label': 'Efectivo ' + pct(pe) + ', Bizum ' + pct(pb) }, h('i', { class: 'is-ef', 'data-w': pe.toFixed(2) }), h('i', { class: 'is-bz', 'data-w': pb.toFixed(2) })),
-      h('div', { class: 'ndc-split-legend' },
-        h('div', {}, h('span', {}, h('i', { class: 'ndc-sw ndc-sw-ef' }), 'Efectivo'), h('b', { text: pct(pe) }), h('em', { text: eur(o.efectivo) })),
-        h('div', {}, h('span', {}, h('i', { class: 'ndc-sw ndc-sw-bz' }), 'Bizum'), h('b', { text: pct(pb) }), h('em', { text: eur(o.bizum) }))));
+    const hechas = dash.data('funciones').data.filter((f) => f.obra === o.obra && f.celebrada).sort((a, b) => a.sesion - b.sesion);
+    const usados = metodosDe(hechas);
+    const pctDe = (m) => (o[m.k] || 0) / o.recaudacion * 100;
+    const kids = [
+      h('div', { class: 'ndc-split-bar', role: 'img', 'aria-label': usados.map((m) => m.nombre + ' ' + pct(pctDe(m))).join(', ') },
+        usados.filter((m) => o[m.k] > 0).map((m) => h('i', { class: 'is-' + (m.k === 'efectivo' ? 'ef' : m.k === 'bizum' ? 'bz' : m.k), 'data-w': pctDe(m).toFixed(2) }))),
+      h('div', { class: 'ndc-split-legend' }, usados.map((m) => h('div', {},
+        h('span', {}, h('i', { class: 'ndc-sw ' + m.sw }), m.nombre),
+        h('b', { class: usados.length > 2 ? 'is-small' : null, text: pct(pctDe(m)) }), h('em', { text: eur(o[m.k] || 0) })))),
+    ];
+    /* Desde la primera función con TPV o QR: cuánto entró por esas vías y la comparación con las funciones anteriores */
+    const inicio = hechas.findIndex((f) => (f.tpv || 0) > 0 || (f.qr || 0) > 0);
+    if (inicio >= 0) {
+      const antes = hechas.slice(0, inicio), despues = hechas.slice(inicio);
+      const suma = (filas, k) => filas.reduce((t, f) => t + (f[k] || 0), 0);
+      const nuevo = suma(despues, 'tpv') + suma(despues, 'qr'), totDespues = suma(despues, 'total');
+      const porEsp = (filas) => { const c = filas.filter((f) => f.asistentes); const a = suma(c, 'asistentes'); return a ? suma(c, 'total') / a : null; };
+      const media = (filas) => (filas.length ? suma(filas, 'total') / filas.length : null);
+      const f0 = despues[0];
+      const nota = [h('p', { text: 'Desde la función ' + f0.sesion + ' (' + fecha(f0.fecha) + ') hay TPV y QR: ' + eur(Math.round(nuevo * 100) / 100) + ', el ' + pct(totDespues ? nuevo / totDespues * 100 : null) + ' de lo recaudado en esas ' + despues.length + ' funciones.' })];
+      if (antes.length) nota.push(
+        h('div', { class: 'ndc-cmp' },
+          h('div', {}, h('span', { text: 'Media por función, antes' }), h('b', { text: eur(media(antes)) })),
+          h('div', {}, h('span', { text: 'Media por función, con TPV y QR' }), h('b', { text: eur(media(despues)) })),
+          h('div', {}, h('span', { text: 'Por espectador, antes' }), h('b', { text: eur2(porEsp(antes)) })),
+          h('div', {}, h('span', { text: 'Por espectador, con TPV y QR' }), h('b', { text: eur2(porEsp(despues)) }))),
+        h('p', { text: 'Comparación descriptiva: también cambian el día, la hora y el público de cada función.' }));
+      kids.push(h('div', { class: 'ndc-split-note' }, nota));
+    }
+    el.replaceChildren(...kids);
     crece(el, primera('split-' + o.obra));
   });
 
@@ -1244,10 +1322,6 @@ dash.calc('gastos_categorias', {
     const b = ev.target.closest('button'); if (!b || !seg.contains(b)) return;
     seg.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
     const destino = document.getElementById(seg.dataset.for);
-    if (seg.dataset.for === 'obra-sesiones') {
-      const a = document.getElementById('leyenda-recaudacion'), c = document.getElementById('leyenda-asistentes');
-      if (a) a.hidden = b.dataset.val !== 'recaudacion'; if (c) c.hidden = b.dataset.val !== 'asistentes';
-    }
     if (destino && destino.dataset.draw) dash.draw(destino.dataset.draw);
   }));
   document.querySelectorAll('#orden-sesiones').forEach((s) => s.addEventListener('change', () => dash.draw('obra-tabla')));
