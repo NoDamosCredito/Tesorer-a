@@ -17,10 +17,12 @@ assets/      Logo, icono y carteles (assets/carteles/<obra>.jpg)
 - **Métodos de pago.** Desde Hamilton el formato incluye también las columnas TPV y QR, y "Bizum" pasa a llamarse "Digital" (Bizum + TPV + QR). Los dos formatos funcionan: las obras sin TPV ni QR siguen mostrando solo efectivo y Bizum, y en las que sí los tienen aparecen sus columnas, colores y comparativas.
 - El panel calcula con Efectivo, TPV, QR y las columnas "Recaudación Bizum", así que las fórmulas del Excel no le afectan. Se pueden añadir parejas "Receptor Bizum 3 / Recaudación Bizum 3".
 
+**Hoja "Gastos" de cada Excel de obra**: una línea "Total" con los gastos totales de la obra (o varias partidas, una por fila, y el panel las suma). Con ella se calcula el beneficio. Si está vacía, el beneficio sale como "Faltan los gastos".
+
 **`TESORERIA.xlsx`**, con dos hojas:
 
-- CUENTA (Fecha, Saldo): el saldo del banco. Se muestra la fila más reciente. La que hay (8.300 €) es de ejemplo.
-- GASTOS (Fecha, Obra, Concepto, Categoría, Importe): un gasto por fila. En Obra, el nombre de la hoja de la obra (Hamilton), o vacío si es general.
+- CUENTA (Fecha, Saldo, Pendiente de cobro, Concepto pendiente): el saldo del banco. Se muestra la fila más reciente; si hay algo pendiente de cobro, también aparece el saldo cuando llegue.
+- GASTOS (Fecha, Obra, Concepto, Categoría, Importe): los gastos sueltos del día a día, que salen en "Últimos gastos". En Obra, el nombre de la obra o vacío si es general.
 
 ## Añadir una obra
 
@@ -29,11 +31,8 @@ assets/      Logo, icono y carteles (assets/carteles/<obra>.jpg)
    ```js
    const ARCHIVOS = [
      'RECAUDACION_HAMILTON.xlsx',
-     'Recaudacion_Luna_Sobre_Buffalo.xlsx',
-     'Recaudacion_La_Funcion_que_sale_mal.xlsx',
-     'Recaudacion_Cluedo.xlsx',
-     'Recaudacion_Los_ladrones_somos_gente_honrada.xlsx',
-     'Recaudacion_Ni_Oficio_ni_beneficio.xlsx',
+     'Recaudacion_Mamma_Mia.xlsx',
+     // ... el resto de obras
      'Recaudacion_Nueva_Obra.xlsx',   // la nueva
      'TESORERIA.xlsx',
    ];
