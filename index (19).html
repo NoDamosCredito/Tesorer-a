@@ -1,0 +1,1569 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>No Damos Crédito · Tesorería y donaciones</title>
+<link rel="icon" href="assets/favicon.png">
+<style>
+html, body { margin: 0; background: #FBF7EC; }
+.ndc-sort select { font: inherit; font-size: 13.5px; padding: 5px 12px; }
+@font-face { font-family: "NdcDisplay"; font-weight: 400; src: local("Impact"), local("HelveticaNeue-CondensedBlack"), local("AvenirNextCondensed-Heavy"), local("Roboto Condensed Bold"), local("RobotoCondensed-Bold"), local("Arial Narrow Bold"), local("ArialNarrow-Bold"), local("DejaVu Sans Condensed Bold"), local("Liberation Sans Narrow Bold"), local("Arial Bold"), local("Arial-BoldMT"), local("Liberation Sans Bold"); }
+.ndc {
+  --bg: #FBF7EC; --card: #FFFFFF; --ink: #15130F; --muted: #6A6558; --line: #E7E0CC;
+  --yellow: #FFE500; --yellow-soft: #FFF6B0; --amber: #E9A31C; --good: #1C7C4D; --bad: #BF3B2B;
+  --display: "NdcDisplay", Impact, Haettenschweiler, "Arial Narrow Bold", "Roboto Condensed", "Helvetica Neue Condensed Bold", sans-serif-condensed, var(--font-anthropic-sans, system-ui), sans-serif;
+  --sans: var(--font-anthropic-sans, system-ui), -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg); color: var(--ink); font-family: var(--sans); font-size: 15px; line-height: 1.45;
+  padding: clamp(16px, 3.2cqi, 40px); padding-bottom: 72px; container-type: inline-size; color-scheme: light;
+  min-height: 100%; box-sizing: border-box;
+}
+.ndc *, .ndc *::before, .ndc *::after { box-sizing: border-box; }
+.ndc [hidden] { display: none !important; }
+.ndc h1, .ndc h2, .ndc h3, .ndc p, .ndc ol, .ndc ul { margin: 0; padding: 0; }
+.ndc ol, .ndc ul { list-style: none; }
+.ndc button { font: inherit; color: inherit; cursor: pointer; }
+.ndc b { font-weight: 700; }
+
+/* ---------- cabecera ---------- */
+.ndc-top { display: flex; align-items: center; gap: 20px 28px; flex-wrap: wrap; margin-bottom: 28px; }
+.ndc-logo { height: 62px; width: auto; display: block; transform: rotate(-2deg); transform-origin: left center; }
+.ndc-top-title { flex: 1 1 220px; min-width: 0; }
+.ndc-top-title h1 { font-family: var(--display); font-weight: 400; font-size: clamp(30px, 4.6cqi, 46px); line-height: 1; letter-spacing: .01em; text-transform: uppercase; }
+.ndc-top-title p { color: var(--muted); margin-top: 6px; }
+.ndc-tabs { display: inline-flex; background: var(--ink); border-radius: 999px; padding: 4px; gap: 2px; }
+.ndc-tab { border: 0; background: transparent; color: #F6F0DC !important; padding: 9px 20px; border-radius: 999px; font-weight: 600; font-size: 15px; transition: background .25s, color .25s, transform .15s; }
+.ndc-tab:hover { background: rgba(255,255,255,.12); }
+.ndc-tab[aria-selected="true"] { background: var(--yellow); color: var(--ink) !important; }
+.ndc-tab:active { transform: scale(.96); }
+.ndc-tab:focus-visible, .ndc-seg button:focus-visible, .ndc-back:focus-visible, .ndc-row-btn:focus-visible, .ndc-obra-card:focus-visible, .ndc-more:focus-visible { outline: 3px solid var(--amber); outline-offset: 2px; }
+
+/* ---------- titulares tipo cinta ---------- */
+.ndc .ndc-tape { margin: 48px 0 20px; line-height: 1; }
+.ndc .ndc-tape-first { margin-top: 4px; }
+.ndc-kpis-5 + .ndc-hero { margin-top: 28px; }
+.ndc-tape span { display: inline-block; background: var(--ink); color: #FFFDF3; font-family: var(--display); font-weight: 400; text-transform: uppercase; letter-spacing: .03em; font-size: clamp(22px, 3cqi, 30px); padding: 9px 26px 8px 18px; transform: rotate(-1.4deg); clip-path: polygon(0 0, 100% 0, 97% 100%, 1.5% 100%); }
+
+/* ---------- foco / saldo ---------- */
+.ndc-hero { display: grid; grid-template-columns: minmax(0, 1.7fr) minmax(0, 1fr); gap: 20px; align-items: stretch; }
+.ndc-beam { position: relative; min-height: 240px; display: flex; align-items: center; padding: 26px 26px 26px 64px; isolation: isolate; }
+.ndc-beam-light { position: absolute; inset: 0 0 0 30px; background: var(--yellow); z-index: -1; clip-path: polygon(0 36%, 100% 0, 100% 100%, 0 64%); transform-origin: 0 50%; }
+.ndc-lamp { position: absolute; left: 4px; top: 50%; width: 44px; height: 88px; margin-top: -44px; background: var(--ink); border-radius: 88px 0 0 88px; z-index: 1; box-shadow: inset -7px 0 0 #FFFDF3, inset -11px 0 0 var(--ink); }
+.ndc-beam-label { font-weight: 600; font-size: 16px; }
+.ndc-saldo { font-family: var(--display); font-size: clamp(64px, 12cqi, 132px); line-height: .95; letter-spacing: .005em; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ndc-saldo b { font-weight: 400; }
+.ndc-beam-foot { font-size: 14px; color: #3d3a2c; margin-top: 4px; }
+
+.ndc-card { background: var(--card); border: 1.5px solid var(--ink); border-radius: 14px; padding: 20px 20px 22px; box-shadow: 4px 4px 0 var(--ink); min-width: 0; }
+.ndc-card h3 { font-size: 19px; font-weight: 700; line-height: 1.2; }
+.ndc-top5 { display: inline-block; vertical-align: middle; margin-left: 6px; background: var(--yellow); border: 1.5px solid var(--ink); border-radius: 999px; padding: 1px 8px; font-size: 12px; font-weight: 700; }
+.ndc-hint { color: var(--muted); font-size: 13.5px; margin-top: 3px !important; margin-bottom: 14px !important; }
+.ndc-note { color: var(--muted); font-size: 13px; margin-top: 14px !important; max-width: 70ch; }
+.ndc-empty { color: var(--muted); font-size: 14px; border: 1.5px dashed #CFC6AC; border-radius: 10px; padding: 14px; margin-top: 12px !important; background: #FFFDF6; }
+.ndc-card-head { display: flex; flex-wrap: wrap; gap: 10px 16px; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+.ndc-controls { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 14px; }
+.ndc-card-head .ndc-controls { margin: 0; }
+
+.ndc-gastos-mini h3 { margin-bottom: 8px; }
+.ndc-mini-list li { display: grid; grid-template-columns: auto 1fr auto; gap: 10px; padding: 8px 0; border-bottom: 1px solid var(--line); font-size: 14px; align-items: baseline; }
+.ndc-mini-list li:last-child { border-bottom: 0; }
+.ndc-mini-list .ndc-when { color: var(--muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ndc-mini-list .ndc-amt { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+
+/* ---------- cifras ---------- */
+.ndc-kpis { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 0; margin-top: 26px; border-top: 2px solid var(--ink); border-bottom: 2px solid var(--ink); }
+.ndc-kpis-5 { grid-template-columns: repeat(5, minmax(0, 1fr)); }
+.ndc-kpis-5 .ndc-kpi b { font-size: clamp(26px, 3.3cqi, 40px); }
+.ndc-kpi { padding: 16px 14px 14px; border-left: 1px solid var(--line); min-width: 0; }
+.ndc-kpi:first-child { border-left: 0; padding-left: 2px; }
+.ndc-kpi b { display: block; font-family: var(--display); font-weight: 400; font-size: clamp(30px, 4.4cqi, 46px); line-height: 1.05; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ndc-kpi > span { color: var(--muted); font-size: 14px; }
+
+/* ---------- rejillas ---------- */
+.ndc-grid { display: grid; gap: 20px; align-items: start; }
+.ndc-grid-4 { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+.ndc-grid-2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.ndc-card-big { padding: 24px 26px 26px; }
+.ndc-card-big .ndc-rank { gap: 14px; }
+.ndc-card-big .ndc-rank-name { font-size: 16px; }
+.ndc-card-big .ndc-bar { height: 16px; }
+.ndc-saldo b.is-neg { color: var(--bad); }
+.ndc-pendiente { display: grid; grid-template-columns: auto auto; gap: 6px 18px; margin-top: 12px; background: rgba(255,253,243,.82); border: 1.5px solid var(--ink); border-radius: 10px; padding: 8px 14px; width: fit-content; max-width: 100%; font-size: 14px; }
+.ndc-pendiente div { display: contents; }
+.ndc-pendiente:empty { display: none; }
+.ndc-stack { display: flex; height: 100%; width: 100%; }
+.ndc-stack.is-alto { height: 30px; border: 1.5px solid var(--ink); border-radius: 6px; overflow: hidden; background: #F1EBD9; margin: 12px 0 4px; }
+.ndc-seg-g { display: block; height: 100%; width: 0; flex: none; transition: width .9s cubic-bezier(.2,.8,.2,1); box-shadow: inset -1px 0 0 rgba(21,19,15,.55); }
+.ndc-seg-g.is-grupo, .ndc-sw-grupo { background: repeating-linear-gradient(45deg, var(--ink) 0 2px, #fff 2px 6px) !important; }
+.ndc-seg-g.is-sin, .ndc-sw-sin { background: #B9AE91 !important; }
+.ndc-bar.ndc-bar-stack { overflow: hidden; }
+.ndc-legend-gastos { margin-bottom: 18px; }
+.ndc-ben-nota { display: flex; flex-wrap: wrap; gap: 4px 18px; margin: 8px 0 0 88px; font-size: 13px; color: var(--muted); }
+.ndc-ben-nota b { color: var(--ink); font-variant-numeric: tabular-nums; }
+.ndc-ben-nota b.is-good { color: var(--good); } .ndc-ben-nota b.is-bad { color: var(--bad); }
+.ndc-balance .is-off { display: none !important; }
+.ndc-balance .ndc-balance-sub { border-top: 0; }
+.ndc-balance .ndc-balance-sub span { font-size: 13px; }
+.ndc-gx-head { display: flex; flex-wrap: wrap; gap: 14px 36px; margin-bottom: 16px; }
+.ndc-gx-head div span { display: block; color: var(--muted); font-size: 13.5px; }
+.ndc-gx-head div b { display: block; font-family: var(--display); font-weight: 400; font-size: clamp(28px, 3.6cqi, 40px); line-height: 1.05; font-variant-numeric: tabular-nums; }
+.ndc-gx-head div em { font-style: normal; color: var(--muted); font-size: 13px; }
+.ndc-gx-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px 36px; margin-top: 26px; }
+.ndc-gx-grid h4 { margin: 0 0 10px; font-size: 16px; }
+.ndc-gx-grid .ndc-hint { margin-top: -6px !important; }
+.ndc-gx-list { display: grid; gap: 0; }
+.ndc-gx-list li { display: grid; grid-template-columns: 12px minmax(0, 1fr) auto; gap: 10px; align-items: start; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.ndc-gx-list li:last-child { border-bottom: 0; }
+.ndc-gx-cat { width: 12px; height: 12px; border-radius: 3px; border: 1.5px solid var(--ink); margin-top: 4px; }
+.ndc-gx-txt { display: grid; min-width: 0; }
+.ndc-gx-txt b { font-weight: 600; overflow-wrap: anywhere; }
+.ndc-gx-txt small { color: var(--muted); font-size: 12.5px; }
+.ndc-gx-amt { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ndc-gx-amt.is-good, .ndc-amt.is-good { color: var(--good); }
+.ndc-mini-sub { display: block; color: var(--muted); font-size: 12px; }
+.ndc-meses { display: grid; gap: 7px; }
+.ndc-meses li { display: grid; grid-template-columns: 56px minmax(0, 1fr) 96px; gap: 10px; align-items: center; font-size: 13.5px; }
+.ndc-meses .ndc-bar { height: 14px; margin-top: 0; }
+.ndc-meses b { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ndc-mes-l { color: var(--muted); }
+.ndc-pendiente b { font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; }
+.ndc-pendiente b.is-neg { color: var(--bad); }
+.ndc-grid-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.ndc-grid + .ndc-card, .ndc-card + .ndc-card { margin-top: 20px; }
+.ndc-grid > .ndc-card + .ndc-card { margin-top: 0; }
+
+/* ---------- rankings ---------- */
+.ndc-rank { display: grid; gap: 12px; }
+.ndc-rank-cols .ndc-rank { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px 28px; }
+.ndc-rank-row { display: grid; grid-template-columns: 30px minmax(0, 1fr); gap: 10px; align-items: start; }
+.ndc-row-btn { background: none; border: 0; padding: 4px; margin: -4px; text-align: left; border-radius: 8px; width: calc(100% + 8px); transition: background .2s; }
+.ndc-row-btn:hover { background: var(--yellow-soft); }
+.ndc-pos { font-family: var(--display); font-size: 20px; line-height: 1.15; text-align: center; color: var(--muted); font-variant-numeric: tabular-nums; }
+.ndc-rank-row.is-first .ndc-pos { color: var(--ink); }
+.ndc-rank-head { display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.ndc-rank-name { font-weight: 600; overflow-wrap: anywhere; }
+.ndc-rank-val { font-weight: 700; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ndc-rank-sub { color: var(--muted); font-size: 12.5px; margin-top: 3px; }
+.ndc-bar { height: 12px; background: #F1EBD9; border-radius: 3px; margin-top: 5px; overflow: hidden; }
+.ndc-bar i { display: block; height: 100%; background: var(--ink); border-radius: 3px; width: 0; transition: width .9s cubic-bezier(.2,.8,.2,1); }
+.ndc-rank-row.is-first .ndc-bar i { background: var(--yellow); box-shadow: inset 0 0 0 1.5px var(--ink); }
+.ndc-bar.is-gasto i { background: var(--amber); }
+.ndc-bar.is-void { background: none; border: 1.5px dashed #CFC6AC; }
+.ndc-more { margin-top: 14px; background: none; border: 1.5px solid var(--ink); border-radius: 999px; padding: 6px 14px; font-size: 13.5px; font-weight: 600; transition: background .2s; }
+.ndc-more:hover { background: var(--yellow); }
+
+.ndc-seg { display: inline-flex; border: 1.5px solid var(--ink); border-radius: 999px; padding: 2px; background: #fff; flex-wrap: wrap; }
+.ndc-seg button { border: 0; background: transparent; padding: 5px 12px; border-radius: 999px; font-size: 13px; font-weight: 600; color: var(--ink) !important; transition: background .2s; white-space: nowrap; }
+.ndc-seg button:hover { background: var(--yellow-soft); }
+.ndc-controls > .ndc-seg { display: flex; width: 100%; flex-wrap: nowrap; border-radius: 12px; }
+.ndc-controls > .ndc-seg button { flex: 1 1 0; white-space: normal; line-height: 1.2; border-radius: 9px; padding: 6px 4px; text-align: center; }
+.ndc-seg button[aria-pressed="true"] { background: var(--ink); color: #FFFDF3 !important; }
+
+/* beneficio */
+.ndc-ben { display: grid; gap: 18px; }
+.ndc-ben-item { border-bottom: 1px solid var(--line); padding-bottom: 16px; }
+.ndc-ben-item:last-child { border-bottom: 0; padding-bottom: 0; }
+.ndc-ben-title { font-weight: 700; font-size: 16px; display: flex; justify-content: space-between; gap: 10px; align-items: baseline; }
+.ndc-ben-res { font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ndc-ben-res.is-good { color: var(--good); } .ndc-ben-res.is-bad { color: var(--bad); } .ndc-ben-res.is-none { color: var(--muted); font-weight: 600; font-size: 13.5px; }
+.ndc-ben-line { display: grid; grid-template-columns: 78px minmax(0,1fr) 104px; gap: 10px; align-items: center; margin-top: 8px; font-size: 13.5px; }
+.ndc-ben-line .ndc-bar { margin-top: 0; }
+.ndc-ben-line b { font-variant-numeric: tabular-nums; white-space: nowrap; text-align: right; }
+.ndc-ben-line .ndc-bar { height: 14px; }
+.ndc-ben-line .ndc-muted { color: var(--muted); font-weight: 600; }
+
+/* ---------- obras ---------- */
+.ndc-obras-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 24px; min-height: 120px; }
+.ndc-obra-card { background: var(--card); border: 1.5px solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); padding: 0; overflow: hidden; text-align: left; display: flex; flex-direction: column; transition: transform .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s; }
+.ndc-obra-card:hover { transform: translate(-3px, -3px) rotate(-.6deg); box-shadow: 9px 9px 0 var(--yellow), 9px 9px 0 1.5px var(--ink); }
+.ndc-poster { background: var(--yellow) center / cover no-repeat; aspect-ratio: 1131 / 1600; display: grid; place-items: center; font-family: var(--display); font-size: 64px; color: var(--ink); text-transform: uppercase; }
+.ndc-poster.has-img span { display: none; }
+.ndc-poster.has-img { aspect-ratio: auto; background: none; display: block; }
+.ndc-poster img { display: block; width: 100%; height: auto; }
+.ndc-obra-card .ndc-poster { border-bottom: 1.5px solid var(--ink); width: 100%; }
+.ndc-obra-body { padding: 16px 18px 18px; display: grid; gap: 4px; }
+.ndc-obra-title { font-family: var(--display); font-size: 34px; line-height: 1; text-transform: uppercase; letter-spacing: .02em; }
+.ndc-obra-sub { color: var(--muted); font-size: 14px; }
+.ndc-obra-stats { display: flex; gap: 18px; margin-top: 10px; flex-wrap: wrap; }
+.ndc-obra-stats div b { display: block; font-size: 19px; font-variant-numeric: tabular-nums; }
+.ndc-obra-stats div span { color: var(--muted); font-size: 12.5px; }
+.ndc-obra-go { margin-top: 10px; font-weight: 700; font-size: 14px; }
+
+.ndc .ndc-back { background: none; border: 1.5px solid var(--ink); border-radius: 999px; padding: 7px 16px; font-weight: 600; font-size: 14px; margin-bottom: 20px; transition: background .2s, transform .15s; }
+.ndc-back:hover { background: var(--yellow); transform: translateX(-3px); }
+.ndc-ficha-head { display: grid; grid-template-columns: minmax(150px, 230px) minmax(0, 1fr); gap: clamp(18px, 3.4cqi, 40px); align-items: center; min-height: 200px; }
+.ndc-ficha-head .ndc-poster { overflow: hidden; border: 1.5px solid var(--ink); border-radius: 10px; box-shadow: 6px 6px 0 var(--yellow), 6px 6px 0 1.5px var(--ink); transform: rotate(-2deg); width: 100%; }
+.ndc-ficha-title { font-family: var(--display); font-weight: 400; font-size: clamp(54px, 10.5cqi, 124px); line-height: .92; text-transform: uppercase; letter-spacing: .02em; overflow-wrap: break-word; hyphens: manual; }
+.ndc-ficha-title.is-long { font-size: clamp(40px, 6.6cqi, 88px); line-height: .95; }
+.ndc-ficha-sub { font-size: 18px; color: var(--muted); margin-top: 6px; }
+.ndc-ficha-meta { display: grid; gap: 4px; margin-top: 16px; font-size: 15px; }
+.ndc-ficha-meta b { font-weight: 700; }
+.ndc-progress { display: flex; align-items: center; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+.ndc-dots { display: inline-flex; gap: 5px; flex-wrap: wrap; }
+.ndc-dots i { width: 15px; height: 15px; border-radius: 50%; border: 1.5px solid var(--ink); background: transparent; }
+.ndc-dots i.is-on { background: var(--yellow); }
+.ndc-chips { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+.ndc-chip { border: 1.5px solid var(--ink); border-radius: 999px; padding: 2px 10px; font-size: 13px; background: #fff; }
+.ndc-team { display: grid; gap: 10px; margin-top: 16px; font-size: 14px; }
+.ndc-team-label { color: var(--muted); font-size: 13px; }
+
+/* ---------- gráfico de sesiones ---------- */
+.ndc-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; font-size: 13.5px; color: var(--muted); margin-bottom: 6px; }
+.ndc-legend span { display: inline-flex; align-items: center; gap: 6px; }
+.ndc-sw { width: 14px; height: 14px; border-radius: 3px; display: inline-block; border: 1.5px solid var(--ink); }
+.ndc-sw-ef { background: var(--ink); } .ndc-sw-bz { background: var(--yellow); }
+.ndc-sw-tpv { background: var(--amber); } .ndc-sw-qr { background: repeating-linear-gradient(45deg, var(--ink) 0 2px, #fff 2px 5px); }
+.ndc-sw-pend { background: transparent; border: 1.5px dashed #A49C84; } .ndc-sw-aforo { background: #F1EBD9; border-color: #CFC6AC; }
+.ndc-chart { position: relative; min-height: 320px; overflow-x: auto; overflow-y: hidden; }
+.ndc-chart svg { display: block; width: 100%; height: auto; }
+.ndc-chart text { font-family: var(--sans); fill: var(--ink); }
+.ndc-chart .ndc-tick { fill: var(--muted); font-size: 12px; }
+.ndc-chart .ndc-grid-line { stroke: #ECE5D2; }
+.ndc-chart .ndc-val { font-weight: 700; font-size: 13px; font-variant-numeric: tabular-nums; }
+.ndc-chart .ndc-xl { font-size: 12.5px; font-weight: 600; } .ndc-chart .ndc-xl2 { font-size: 11.5px; fill: var(--muted); }
+.ndc-chart .is-pend text { fill: #A49C84; }
+.ndc-chart .ndc-hit { fill: transparent; }
+.ndc-chart .ndc-hit:hover { fill: rgba(255,229,0,.16); }
+.ndc-tip { position: absolute; pointer-events: none; background: var(--ink); color: #FFFDF3; border-radius: 10px; padding: 10px 12px; font-size: 13px; line-height: 1.5; min-width: 180px; z-index: 5; opacity: 0; transform: translateY(4px); transition: opacity .15s, transform .15s; box-shadow: 4px 4px 0 var(--yellow); }
+.ndc-tip.is-on { opacity: 1; transform: none; }
+.ndc-tip strong { display: block; font-size: 14px; margin-bottom: 4px; color: var(--yellow); }
+.ndc-tip div { display: flex; justify-content: space-between; gap: 16px; font-variant-numeric: tabular-nums; }
+
+/* ---------- tabla ---------- */
+.ndc-sort { font-size: 13.5px; color: var(--muted); display: inline-flex; align-items: center; gap: 8px; }
+.ndc-sort .dash-select { background-color: #fff; color: var(--ink); border: 1.5px solid var(--ink); border-radius: 999px; }
+.ndc-table-wrap { overflow-x: auto; }
+.ndc-table { width: 100%; border-collapse: collapse; font-size: 14px; min-width: 640px; }
+.ndc-table th { text-align: left; font-weight: 600; color: var(--muted); font-size: 12.5px; padding: 8px 10px; border-bottom: 2px solid var(--ink); white-space: nowrap; }
+.ndc-table td { padding: 10px; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.ndc-table .ndc-num { text-align: right; }
+.ndc-table tr.is-first td { background: var(--yellow-soft); }
+.ndc-table tr.is-first td:nth-child(3) { font-weight: 700; }
+.ndc-table tr.is-pend td { color: #A49C84; }
+.ndc-table td.ndc-td-pos { font-family: var(--display); font-size: 18px; color: var(--muted); }
+.ndc-table tr.is-first td.ndc-td-pos { color: var(--ink); }
+.ndc-table td.is-sorted { font-weight: 700; }
+
+/* ---------- efectivo / bizum ---------- */
+.ndc-split-bar { display: flex; height: 44px; border: 1.5px solid var(--ink); border-radius: 8px; overflow: hidden; background: #F1EBD9; }
+.ndc-split-bar i { display: block; height: 100%; width: 0; transition: width 1s cubic-bezier(.2,.8,.2,1); }
+.ndc-split-bar .is-ef { background: var(--ink); } .ndc-split-bar .is-bz { background: var(--yellow); }
+.ndc-split-bar .is-tpv { background: var(--amber); } .ndc-split-bar .is-qr { background: repeating-linear-gradient(45deg, var(--ink) 0 2px, #fff 2px 6px); }
+.ndc-split-bar i + i { border-left: 1.5px solid var(--ink); }
+.ndc-split-legend b.is-small { font-size: 26px; }
+.ndc-split-note { margin-top: 16px; padding-top: 14px; border-top: 1px solid var(--line); display: grid; gap: 8px; font-size: 14px; }
+.ndc-split-note p { color: var(--muted); }
+.ndc-split-note .ndc-cmp { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.ndc-split-note .ndc-cmp div { background: #FFFDF6; border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; }
+.ndc-split-note .ndc-cmp span { display: block; color: var(--muted); font-size: 12.5px; }
+.ndc-split-note .ndc-cmp b { font-size: 18px; font-variant-numeric: tabular-nums; }
+.ndc-table.sin-digital .ndc-col-dig { display: none; }
+.ndc-split-legend { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 14px; }
+.ndc-split-legend div span { display: flex; align-items: center; gap: 6px; color: var(--muted); font-size: 13.5px; }
+.ndc-split-legend div b { display: block; font-family: var(--display); font-weight: 400; font-size: 34px; line-height: 1.1; font-variant-numeric: tabular-nums; }
+.ndc-split-legend div em { font-style: normal; font-weight: 600; font-variant-numeric: tabular-nums; }
+
+.ndc-balance { display: grid; gap: 0; margin: 12px 0 4px; }
+.ndc-balance div { display: flex; justify-content: space-between; align-items: baseline; padding: 8px 0; border-bottom: 1px solid var(--line); }
+.ndc-balance div > span { color: var(--muted); }
+.ndc-balance div b { font-variant-numeric: tabular-nums; }
+.ndc-balance .ndc-balance-res { border-bottom: 0; border-top: 2px solid var(--ink); margin-top: -1px; }
+.ndc-balance .ndc-balance-res b { font-size: 20px; }
+
+.ndc-aviso { background: var(--yellow); border: 1.5px solid var(--ink); border-radius: 14px; box-shadow: 4px 4px 0 var(--ink); padding: 16px 20px; margin-bottom: 24px; display: grid; gap: 10px; }
+.ndc-aviso input { font: inherit; }
+.ndc-fail { color: var(--muted); font-size: 14px; }
+.ndc [data-dash-source-state="refreshing"] { opacity: .5; }
+
+
+/* ---------- estrecho ---------- */
+@container (max-width: 1080px) {
+  .ndc-grid-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ndc-grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ndc-kpis-5 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .ndc-kpis-5 .ndc-kpi:nth-child(4) { border-left: 0; padding-left: 2px; }
+  .ndc-kpis-5 .ndc-kpi:nth-child(n+4) { border-top: 1px solid var(--line); }
+}
+@container (max-width: 760px) {
+  .ndc-gx-grid { grid-template-columns: minmax(0, 1fr); }
+  .ndc-ben-nota { margin-left: 0; }
+  .ndc-grid-2 { grid-template-columns: minmax(0, 1fr); }
+  .ndc-hero { grid-template-columns: minmax(0, 1fr); }
+  .ndc-kpis, .ndc-kpis-5 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ndc-kpi:nth-child(odd) { border-left: 0; padding-left: 2px; }
+  .ndc-kpis-5 .ndc-kpi:nth-child(4) { border-left: 1px solid var(--line); padding-left: 14px; }
+  .ndc-kpi:nth-child(n+3) { border-top: 1px solid var(--line); }
+  .ndc-grid-3 { grid-template-columns: minmax(0, 1fr); }
+}
+@container (max-width: 560px) {
+  .ndc-grid-4 { grid-template-columns: minmax(0, 1fr); }
+  .ndc-ficha-head { grid-template-columns: minmax(0, 1fr); }
+  .ndc-ficha-head .ndc-poster { max-width: 190px; }
+  .ndc-beam { padding-left: 54px; min-height: 200px; }
+  .ndc-logo { height: 50px; }
+  .ndc-card { padding: 16px; }
+}
+
+/* ---------- movimiento ---------- */
+@media (prefers-reduced-motion: no-preference) {
+  .ndc-page:not([hidden]) > *, #obra-ficha:not([hidden]) > *, #obras-lista:not([hidden]) > * { animation: ndc-rise .6s cubic-bezier(.2,.8,.2,1) both; }
+  .ndc-page > *:nth-child(2), #obra-ficha > *:nth-child(2) { animation-delay: .06s; }
+  .ndc-page > *:nth-child(3), #obra-ficha > *:nth-child(3) { animation-delay: .12s; }
+  .ndc-page > *:nth-child(4), #obra-ficha > *:nth-child(4) { animation-delay: .18s; }
+  .ndc-page > *:nth-child(n+5), #obra-ficha > *:nth-child(n+5) { animation-delay: .24s; }
+  .ndc-beam-light { animation: ndc-beam 1.1s cubic-bezier(.2,.9,.2,1) both, ndc-flicker 1.1s steps(1) both; }
+  .ndc-lamp { animation: ndc-lamp .7s cubic-bezier(.3,1.6,.5,1) both; }
+  .ndc-beam-text { animation: ndc-rise .7s .45s cubic-bezier(.2,.8,.2,1) both; }
+  .ndc-tape span { animation: ndc-tape .7s cubic-bezier(.3,1.5,.5,1) both; transform-origin: left center; }
+  .ndc-logo { animation: ndc-logo .8s cubic-bezier(.3,1.5,.5,1) both; }
+  .ndc-obra-card { animation: ndc-rise .6s cubic-bezier(.2,.8,.2,1) both; }
+  .ndc-dots i.is-on { animation: ndc-pop .45s cubic-bezier(.3,1.8,.5,1) both; animation-delay: calc(var(--i, 0) * 70ms + .3s); }
+  .ndc-ficha-head .ndc-poster { animation: ndc-poster .8s cubic-bezier(.3,1.4,.5,1) both; }
+  .ndc-grow { transform-box: fill-box; transform-origin: 50% 100%; animation: ndc-grow .7s cubic-bezier(.2,.8,.2,1) both; }
+  .ndc-fade { animation: ndc-fade .35s ease-out both; }
+}
+@keyframes ndc-grow { from { transform: scaleY(0); } to { transform: scaleY(1); } }
+@keyframes ndc-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes ndc-rise { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: none; } }
+@keyframes ndc-beam { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes ndc-flicker { 0% { opacity: 0; } 12% { opacity: 1; } 20% { opacity: .35; } 28% { opacity: 1; } 36% { opacity: .6; } 44%, 100% { opacity: 1; } }
+@keyframes ndc-lamp { from { transform: rotate(-50deg) scale(.6); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes ndc-tape { from { transform: rotate(-8deg) scaleX(.2); opacity: 0; } to { transform: rotate(-1.4deg) scaleX(1); opacity: 1; } }
+@keyframes ndc-logo { from { transform: rotate(-12deg) translateX(-30px); opacity: 0; } to { transform: rotate(-2deg); opacity: 1; } }
+@keyframes ndc-pop { from { transform: scale(0); } to { transform: scale(1); } }
+@keyframes ndc-poster { from { transform: rotate(-9deg) translateY(24px); opacity: 0; } to { transform: rotate(-2deg); opacity: 1; } }
+</style>
+</head>
+<body>
+<div class="ndc" id="ndc">
+
+  <header class="ndc-top" id="cabecera">
+    <img class="ndc-logo" alt="No Damos Crédito" src="assets/logo.png">
+    <div class="ndc-top-title">
+      <h1 id="titulo">Tesorería y donaciones</h1>
+      <p>El histórico de la compañía, función a función.</p>
+    </div>
+    <nav class="ndc-tabs" role="tablist" aria-label="Apartados">
+      <button type="button" role="tab" class="ndc-tab" id="tab-inicio" data-tab="inicio" aria-selected="true">Visión general</button>
+      <button type="button" role="tab" class="ndc-tab" id="tab-obras" data-tab="obras" aria-selected="false">Obras</button>
+    </nav>
+  </header>
+
+  <div class="ndc-aviso" id="ndc-aviso" hidden>
+    <p><b>No he podido leer el Excel de la carpeta data.</b> Si has abierto el panel con doble clic, el navegador lo bloquea: elige aquí el archivo y se cargará igual.</p>
+    <input type="file" id="ndc-archivo" accept=".xlsx" multiple aria-label="Elegir el Excel de recaudaciones">
+  </div>
+
+  <!-- ============ VISIÓN GENERAL ============ -->
+  <section class="ndc-page" id="inicio" role="tabpanel" aria-labelledby="tab-inicio">
+
+    <h2 class="ndc-tape ndc-tape-first" id="kpi-clave"><span>Lo importante</span></h2>
+    <div class="ndc-kpis ndc-kpis-5" id="historico">
+      <div class="ndc-kpi"><b data-draw="total" data-field="media_obra">—</b><span>recaudación media por obra</span></div>
+      <div class="ndc-kpi"><b data-draw="total" data-field="por_espectador">—</b><span>donación media por espectador</span></div>
+      <div class="ndc-kpi"><b data-draw="total" data-field="asistentes_funcion">—</b><span>asistentes medios por función</span></div>
+      <div class="ndc-kpi"><b data-draw="total" data-field="capacidad_funcion">—</b><span>capacidad media por función</span></div>
+      <div class="ndc-kpi"><b data-draw="total" data-field="obras">—</b><span>obras en el histórico</span></div>
+    </div>
+
+    <div class="ndc-hero">
+      <div class="ndc-beam" id="saldo">
+        <span class="ndc-lamp" aria-hidden="true"></span>
+        <span class="ndc-beam-light" aria-hidden="true"></span>
+        <div class="ndc-beam-text">
+          <p class="ndc-beam-label">En la cuenta de la asociación</p>
+          <p class="ndc-saldo"><b data-draw="saldo" data-source="saldo_actual" data-field="saldo" data-row="0">—</b></p>
+          <p class="ndc-beam-foot">Saldo anotado el <span data-draw="saldo-fecha" data-source="saldo_actual" data-field="fecha" data-row="0">—</span></p>
+          <div class="ndc-pendiente" data-draw="saldo-pendiente" data-source="saldo_actual"></div>
+        </div>
+      </div>
+      <aside class="ndc-card ndc-gastos-mini" id="ultimos-gastos">
+        <h3>Últimos gastos</h3>
+        <ul class="ndc-mini-list" data-draw="ultimos-gastos" data-source="gastos"></ul>
+        <p class="ndc-empty" hidden>Aún no hay gastos anotados. Aparecerán aquí en cuanto se registren.</p>
+      </aside>
+    </div>
+
+    <h2 class="ndc-tape" id="ranking-obras"><span>Ranking de obras</span></h2>
+    <div class="ndc-grid ndc-grid-2">
+      <article class="ndc-card ndc-card-big" id="rk-recaudacion">
+        <div class="ndc-card-head">
+          <h3>Recaudación</h3>
+          <div class="ndc-seg" role="group" aria-label="Qué se muestra" data-for="rank-dinero" data-ctl="metric">
+            <button type="button" data-val="recaudacion" aria-pressed="true">Total</button>
+            <button type="button" data-val="media_funcion" aria-pressed="false">Media por sesión</button>
+          </div>
+        </div>
+        <p class="ndc-hint" data-hint-for="rank-dinero" data-recaudacion="Todo lo donado en sus funciones, sumando todos los métodos de pago." data-media_funcion="Lo que deja, de media, cada sesión con datos.">Todo lo donado en sus funciones, sumando todos los métodos de pago.</p>
+        <div id="rank-dinero" data-draw="rank-obras" data-source="obras_stats">—</div>
+      </article>
+      <article class="ndc-card ndc-card-big" id="rk-publico">
+        <div class="ndc-card-head">
+          <h3>Público</h3>
+          <div class="ndc-seg" role="group" aria-label="Qué se muestra" data-for="rank-publico" data-ctl="metric">
+            <button type="button" data-val="asistentes" aria-pressed="true">Asistencia</button>
+            <button type="button" data-val="ocupacion" aria-pressed="false">Ocupación</button>
+          </div>
+        </div>
+        <p class="ndc-hint" data-hint-for="rank-publico" data-asistentes="Espectadores sumando las funciones con asistentes anotados." data-ocupacion="Butacas ocupadas sobre el aforo disponible. La barra llega al 100 %.">Espectadores sumando las funciones con asistentes anotados.</p>
+        <div id="rank-publico" data-draw="rank-obras" data-source="obras_stats">—</div>
+      </article>
+    </div>
+
+    <h2 class="ndc-tape" id="beneficio"><span>Histórico de beneficios por obra</span></h2>
+    <article class="ndc-card" id="rk-beneficio">
+      <p class="ndc-hint">Lo recaudado frente a los gastos, en la misma escala y ordenadas de más a menos beneficio. Cada barra de gastos separa lo que fue de la obra (por categoría) de lo que compró el grupo para el futuro (rayado). Pasa el ratón por la barra para ver cada parte.</p>
+      <div data-draw="beneficio" data-source="obras_stats">—</div>
+    </article>
+
+    <h2 class="ndc-tape" id="taquilleros"><span>Los que más obras han hecho</span></h2>
+    <div class="ndc-grid ndc-grid-3">
+      <article class="ndc-card" id="rk-actores">
+        <h3>Actores <span class="ndc-top5">Top 5</span></h3>
+        <p class="ndc-hint">Por número de obras en las que ha participado.</p>
+        <div id="home-actores" data-draw="rank-personas" data-grupo="actores" data-scope="todas" data-source="personas">—</div>
+      </article>
+      <article class="ndc-card" id="rk-tecnicos">
+        <h3>Técnicos <span class="ndc-top5">Top 5</span></h3>
+        <p class="ndc-hint">Por número de obras en las que ha participado.</p>
+        <div id="home-tecnicos" data-draw="rank-personas" data-grupo="tecnicos" data-scope="todas" data-source="personas">—</div>
+      </article>
+      <article class="ndc-card" id="rk-directores">
+        <h3>Directores <span class="ndc-top5">Top 5</span></h3>
+        <p class="ndc-hint">Por número de obras en las que ha participado.</p>
+        <div id="home-directores" data-draw="rank-personas" data-grupo="direccion" data-scope="todas" data-source="personas">—</div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ OBRAS ============ -->
+  <section class="ndc-page" id="obras" role="tabpanel" aria-labelledby="tab-obras" hidden>
+
+    <div id="obras-lista">
+      <h2 class="ndc-tape" id="todas-las-obras"><span>Todas las obras</span></h2>
+      <div class="ndc-obras-grid" data-draw="obras-grid" data-source="obras_stats"></div>
+      <p class="ndc-note">Cada obra nueva aparece aquí en cuanto se añade su Excel a la carpeta data.</p>
+    </div>
+
+    <div id="obra-ficha" hidden>
+      <button type="button" class="ndc-back" id="volver">← Todas las obras</button>
+
+      <div class="ndc-ficha-head" id="obra-cabecera" data-draw="obra-cabecera" data-source="obras_stats sesiones">—</div>
+
+      <div class="ndc-kpis ndc-kpis-5" id="obra-cifras">
+        <div class="ndc-kpi"><b data-draw="obra-kpi" data-field="recaudacion">—</b><span>recaudados</span></div>
+        <div class="ndc-kpi"><b data-draw="obra-kpi" data-field="asistentes">—</b><span>espectadores</span></div>
+        <div class="ndc-kpi"><b data-draw="obra-kpi" data-field="ocupacion">—</b><span>de ocupación</span></div>
+        <div class="ndc-kpi"><b data-draw="obra-kpi" data-field="media_funcion">—</b><span>de media por sesión</span></div>
+        <div class="ndc-kpi"><b data-draw="obra-kpi" data-field="por_asistente">—</b><span>por espectador</span></div>
+      </div>
+
+      <h2 class="ndc-tape" id="obra-sesiones-titulo"><span>Función a función</span></h2>
+      <article class="ndc-card" id="obra-sesiones-card">
+        <div class="ndc-card-head">
+          <h3>Desglose por sesión</h3>
+          <div class="ndc-seg" role="group" aria-label="Qué se muestra" data-for="obra-sesiones" data-ctl="metric">
+            <button type="button" data-val="recaudacion" aria-pressed="true">Recaudación</button>
+            <button type="button" data-val="mix" aria-pressed="false" id="boton-mix">Métodos de pago (%)</button>
+            <button type="button" data-val="asistentes" aria-pressed="false">Asistentes</button>
+          </div>
+        </div>
+        <div class="ndc-legend" id="leyenda-sesiones"></div>
+        <div class="ndc-chart" id="obra-sesiones" data-draw="obra-sesiones" data-source="funciones">—</div>
+      </article>
+
+      <article class="ndc-card" id="obra-ranking-sesiones">
+        <div class="ndc-card-head">
+          <h3>Ranking de sesiones</h3>
+          <label class="ndc-sort">Ordenar por
+            <select class="dash-select" id="orden-sesiones" aria-label="Ordenar sesiones por">
+              <option value="total" selected>Recaudación</option>
+              <option value="asistentes">Asistentes</option>
+              <option value="ocupacion">Ocupación</option>
+              <option value="por_asistente">Euros por espectador</option>
+              <option value="digital" class="ndc-col-dig">Pagos con TPV y QR</option>
+              <option value="sesion">Orden de calendario</option>
+            </select>
+          </label>
+        </div>
+        <div class="ndc-table-wrap">
+          <table class="ndc-table" data-source="funciones" data-row-key="obra,sesion">
+            <thead>
+              <tr>
+                <th class="ndc-th-pos">Puesto</th>
+                <th data-field="sesion">Función</th>
+                <th data-field="total" class="ndc-num">Recaudación</th>
+                <th data-field="efectivo" class="ndc-num">Efectivo</th>
+                <th data-field="bizum" class="ndc-num">Bizum</th>
+                <th data-field="tpv" class="ndc-num ndc-col-dig">TPV</th>
+                <th data-field="qr" class="ndc-num ndc-col-dig">QR</th>
+                <th data-field="asistentes" class="ndc-num">Asistentes</th>
+                <th data-field="ocupacion" class="ndc-num">Ocupación</th>
+                <th data-field="por_asistente" class="ndc-num">Por espectador</th>
+              </tr>
+            </thead>
+            <tbody data-draw="obra-tabla"></tbody>
+          </table>
+        </div>
+      </article>
+
+      <h2 class="ndc-tape" id="obra-dinero-titulo"><span>De dónde viene y adónde va</span></h2>
+      <div class="ndc-grid ndc-grid-3">
+        <article class="ndc-card" id="obra-efectivo-bizum">
+          <h3>Métodos de pago</h3>
+          <p class="ndc-hint">Reparto de las donaciones según cómo se entregaron.</p>
+          <div data-draw="obra-split" data-source="obras_stats">—</div>
+        </article>
+        <article class="ndc-card" id="obra-receptores">
+          <h3>Receptores de Bizum</h3>
+          <p class="ndc-hint">Quién ha recibido los Bizum del público.</p>
+          <div data-draw="obra-bizum" data-source="bizum_receptores">—</div>
+          <p class="ndc-empty" hidden>No hay Bizum anotados en esta obra.</p>
+        </article>
+        <article class="ndc-card" id="obra-gastos-card">
+          <h3>Gastos y beneficio</h3>
+          <div class="ndc-balance">
+            <div><span>Recaudado</span><b data-draw="obra-kpi" data-field="recaudacion">—</b></div>
+            <div class="ndc-solo-grupo"><span>Gastos de la obra</span><b data-draw="obra-kpi" data-field="gasto_obra">—</b></div>
+            <div class="ndc-solo-grupo"><span>Gastos del grupo</span><b data-draw="obra-kpi" data-field="gasto_grupo">—</b></div>
+            <div><span>Gastos totales</span><b data-draw="obra-kpi" data-field="gasto">—</b></div>
+            <div class="ndc-balance-res"><span>Beneficio</span><b data-draw="obra-kpi" data-field="beneficio">—</b></div>
+            <div class="ndc-solo-grupo ndc-balance-sub"><span>Sin los gastos del grupo</span><b data-draw="obra-kpi" data-field="beneficio_obra">—</b></div>
+          </div>
+          <div data-draw="obra-gastos-mini" data-source="gastos_desglose"></div>
+          <p class="ndc-empty" hidden>Todavía no hay gastos anotados para esta obra, así que el beneficio queda sin calcular. Se anotan en la hoja Gastos de su Excel.</p>
+        </article>
+      </div>
+
+      <h2 class="ndc-tape" id="obra-gastos-titulo"><span>En qué se gastó</span></h2>
+      <article class="ndc-card" id="obra-gastos-detalle">
+        <div data-draw="obra-gastos" data-source="gastos_desglose gastos">—</div>
+      </article>
+
+      <h2 class="ndc-tape" id="obra-reparto-titulo"><span>El equipo</span></h2>
+      <article class="ndc-card" id="obra-reparto-card">
+        <div class="ndc-card-head">
+          <div class="ndc-seg" role="group" aria-label="Quién se muestra" data-for="obra-actores" data-ctl="grupo">
+            <button type="button" data-val="actores" aria-pressed="true">Actores</button>
+            <button type="button" data-val="tecnicos" aria-pressed="false">Técnicos</button>
+            <button type="button" data-val="direccion" aria-pressed="false">Directores</button>
+          </div>
+        </div>
+        <div id="obra-actores" class="ndc-rank-cols" data-draw="rank-personas" data-scope="obra" data-source="personas">—</div>
+        <p class="ndc-note">Ordenado por el número total de obras de la compañía en las que ha participado cada persona.</p>
+      </article>
+    </div>
+  </section>
+</div>
+
+<script>
+/* ===== 1. Datos: lee el Excel de data/ tal cual (una hoja por obra) ===== */
+
+/* Excel que lee el panel, dentro de la carpeta data/.
+   Cada hoja con columnas "Sesión" y "Fecha" es una obra (el nombre de la hoja es el título).
+   Una hoja con "Fecha" y "Saldo" es el saldo del banco; una con "Concepto" e "Importe", los gastos. */
+const ARCHIVOS = [
+  'RECAUDACION_HAMILTON.xlsx',
+  'Recaudacion_La_Funcion_que_sale_mal.xlsx',
+  'Recaudacion_Luna_Sobre_Buffalo.xlsx',
+  'Recaudacion_Los_ladrones_somos_gente_honrada.xlsx',
+  'Recaudacion_Mamma_Mia.xlsx',
+  'Recaudacion_Madre_el_drama_padre.xlsx',
+  'Recaudacion_Ni_Oficio_ni_beneficio.xlsx',
+  'Recaudacion_La_Llamada.xlsx',
+  'Recaudacion_Un_musical_muy_Potter.xlsx',
+  'Recaudacion_Un_Funeral_de_muerte.xlsx',
+  'Recaudacion_Prestame_Tenor.xlsx',
+  'Recaudacion_Cluedo.xlsx',
+  'TESORERIA.xlsx',
+];
+
+/* Nombres: el panel ya unifica tildes, mayúsculas, guiones, apodos y nombres incompletos.
+   Si alguna persona sigue saliendo con dos nombres, o se juntan dos personas distintas, se corrige aquí. */
+const APODOS = {           // apodo → nombre completo (solo se usa para reconocer a la misma persona)
+  cris: 'cristina', mingo: 'domingo', quique: 'enrique', charlie: 'carlos', sebas: 'sebastian', almu: 'almudena',
+  pati: 'patricia', pepe: 'jose', paco: 'francisco', nacho: 'ignacio', lola: 'dolores', fer: 'fernando', alex: 'alejandro',
+};
+const ALIAS = {            // 'como aparece en el Excel': 'como debe salir en el panel'
+  // 'Sebas': 'Sebastián Merlano',
+};
+const NO_UNIR = [          // parejas de nombres que son personas distintas aunque se parezcan
+  // ['Luis García', 'Luis García Iglesias'],
+];
+
+(() => {
+  const datos = {}, calculos = {}, dibujos = {};
+  let listo = false, cache = {};
+
+  /* --- Lector de .xlsx sin librerías: un xlsx es un zip con XML dentro --- */
+  const leeXlsx = async (buffer, archivo) => {
+    const u8 = new Uint8Array(buffer), dv = new DataView(buffer), dec = new TextDecoder();
+    let fin = u8.length - 22;
+    while (fin >= 0 && dv.getUint32(fin, true) !== 0x06054b50) fin--;
+    if (fin < 0) throw new Error('El archivo no es un .xlsx válido');
+    const entradas = {}; let p = dv.getUint32(fin + 16, true);
+    for (let k = dv.getUint16(fin + 10, true); k > 0 && dv.getUint32(p, true) === 0x02014b50; k--) {
+      const nl = dv.getUint16(p + 28, true), el = dv.getUint16(p + 30, true), cl = dv.getUint16(p + 32, true);
+      entradas[dec.decode(u8.subarray(p + 46, p + 46 + nl))] = { metodo: dv.getUint16(p + 10, true), tam: dv.getUint32(p + 20, true), pos: dv.getUint32(p + 42, true) };
+      p += 46 + nl + el + cl;
+    }
+    const xml = async (nombre) => {
+      const e = entradas[nombre]; if (!e) return null;
+      const ini = e.pos + 30 + dv.getUint16(e.pos + 26, true) + dv.getUint16(e.pos + 28, true), crudo = u8.subarray(ini, ini + e.tam);
+      const texto = e.metodo === 0 ? dec.decode(crudo)
+        : await new Response(new Blob([crudo]).stream().pipeThrough(new DecompressionStream('deflate-raw'))).text();
+      return new DOMParser().parseFromString(texto, 'application/xml');
+    };
+    const tags = (nodo, nombre) => [...nodo.getElementsByTagNameNS('*', nombre)];
+    const libro = await xml('xl/workbook.xml'), rels = await xml('xl/_rels/workbook.xml.rels');
+    if (!libro || !rels) throw new Error('El archivo no es un .xlsx válido');
+    const destino = {}; tags(rels, 'Relationship').forEach((r) => { destino[r.getAttribute('Id')] = r.getAttribute('Target'); });
+    const sst = await xml('xl/sharedStrings.xml');
+    const cadenas = sst ? tags(sst, 'si').map((si) => tags(si, 't').filter((t) => t.parentNode.localName !== 'rPh').map((t) => t.textContent).join('')) : [];
+    const hojas = [];
+    for (const s of tags(libro, 'sheet')) {
+      if (s.getAttribute('state') === 'hidden' || s.getAttribute('state') === 'veryHidden') continue;
+      const t = destino[s.getAttribute('r:id') || s.getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships', 'id')] || '';
+      const doc = await xml(t.startsWith('/') ? t.slice(1) : 'xl/' + t); if (!doc) continue;
+      const filas = [];
+      for (const r of tags(doc, 'row')) {
+        const fila = [];
+        for (const c of tags(r, 'c')) {
+          const letras = (c.getAttribute('r') || '').replace(/\d+/g, ''); let col = 0;
+          for (const ch of letras) col = col * 26 + ch.charCodeAt(0) - 64;
+          const tipo = c.getAttribute('t'), v = tags(c, 'v')[0];
+          let valor = null;
+          if (tipo === 'inlineStr') valor = tags(c, 't').map((x) => x.textContent).join('');
+          else if (v && v.textContent !== '') valor = tipo === 's' ? cadenas[+v.textContent] : tipo === 'str' || tipo === 'e' ? v.textContent : tipo === 'b' ? v.textContent === '1' : +v.textContent;
+          if (typeof valor === 'string') { valor = valor.replace(/[\u200B-\u200D\u2060\uFEFF]/g, '').replace(/\u00A0/g, ' ').trim(); if (valor === '') valor = null; }
+          fila[(col || fila.length + 1) - 1] = valor;
+        }
+        filas.push(fila);
+      }
+      hojas.push({ nombre: s.getAttribute('name'), archivo: archivo || '', filas });
+    }
+    return hojas;
+  };
+
+  /* --- De las hojas del Excel a las tablas que usa el panel --- */
+  const llano = (t) => String(t == null ? '' : t).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().replace(/[-_]+/g, ' ').replace(/\s+/g, ' ').trim();
+  const numero = (v) => { if (v == null || v === '') return null; if (typeof v === 'number') return isFinite(v) ? v : null; const n = +String(v).replace(/[€\s]/g, '').replace(/\.(?=\d{3}(\D|$))/g, '').replace(',', '.'); return isFinite(n) ? n : null; };
+  const dos = (n) => String(n).padStart(2, '0');
+  const aFecha = (v) => {                                   /* Excel guarda las fechas como días desde 1900 */
+    if (v == null) return null;
+    if (typeof v === 'number') { const d = new Date(Math.round((v - 25569) * 86400000)); return d.getUTCFullYear() + '-' + dos(d.getUTCMonth() + 1) + '-' + dos(d.getUTCDate()); }
+    let m = /^(\d{4})-(\d{1,2})-(\d{1,2})/.exec(v); if (m) return m[1] + '-' + dos(m[2]) + '-' + dos(m[3]);
+    m = /^(\d{1,2})[\/.-](\d{1,2})[\/.-](\d{2,4})/.exec(v); if (m) return (m[3].length === 2 ? '20' + m[3] : m[3]) + '-' + dos(m[2]) + '-' + dos(m[1]);
+    return null;
+  };
+  const aHora = (v) => {                                    /* admite "18.00", "18:00", 16.3 o una hora de Excel */
+    if (v == null) return null;
+    if (typeof v === 'number') { if (v < 1) { const min = Math.round(v * 1440); return dos(Math.floor(min / 60)) + ':' + dos(min % 60); } return dos(Math.floor(v)) + ':' + dos(Math.round((v - Math.floor(v)) * 100)); }
+    const m = /^(\d{1,2})\s*[.:h]\s*(\d{2})?/.exec(String(v)); return m ? dos(m[1]) + ':' + (m[2] || '00') : String(v);
+  };
+  const titulo = (t) => (String(t).trim() !== String(t).trim().toUpperCase() ? String(t).trim() : String(t).trim().toLowerCase().replace(/(^|[\s-])(\p{L})/gu, (_, a, b) => a + b.toUpperCase()));
+  const lista = (v) => String(v == null ? '' : v).split(/[;,\n]/).map((x) => x.trim()).filter(Boolean);
+
+  /* Unifica a las personas que aparecen con nombres distintos:
+     1. tildes, mayúsculas, guiones y espacios ("Jaime Abengozar" = "Jaime Abengózar", "Elena-Álvaro" = "Elena Álvaro");
+     2. apodos de la lista APODOS ("Cris Ayora" = "Cristina Ayora", "Mingo Delgado" = "Domingo Delgado");
+     3. nombres incompletos: "Luis García" = "Luis García Iglesias" si solo hay un nombre más largo que empiece o acabe así;
+     4. un nombre suelto ("Jimena") = el único nombre completo de esa misma obra que empiece o acabe por él.
+     Siempre se muestra la forma más completa, con tildes y mayúsculas. ALIAS y NO_UNIR permiten corregir a mano. */
+  const PARTICULAS = new Set(['de', 'del', 'la', 'las', 'los', 'y', 'e', 'da', 'do', 'dos', 'van', 'von']);
+  const normalizador = (registro) => {
+    const alias = new Map(Object.entries(ALIAS).map(([a, b]) => [llano(a), b]));
+    const separados = new Set(NO_UNIR.map(([a, b]) => [llano(a), llano(b)].sort().join('|')));
+    const fichas = (n) => { const t = llano(n).split(' ').filter(Boolean); if (t.length && APODOS[t[0]]) t[0] = APODOS[t[0]]; return t; };
+    const grupos = new Map();
+    for (const { nombre, obra } of registro) {
+      const visible = alias.get(llano(nombre)) || nombre, t = fichas(visible), k = t.join(' '); if (!k) continue;
+      const g = grupos.get(k) || { k, t, formas: new Map(), obras: new Set() };
+      g.formas.set(visible, (g.formas.get(visible) || 0) + 1); g.obras.add(obra); grupos.set(k, g);
+    }
+    const padre = new Map(), raiz = (k) => { while (padre.has(k)) k = padre.get(k); return k; };
+    const unibles = (a, b) => !separados.has([a, b].sort().join('|'));
+    const lista = [...grupos.values()];
+    const contiene = (largo, corto) => {          /* el corto aparece al principio o al final del largo */
+      const n = corto.length; if (n >= largo.length) return false;
+      return corto.every((x, i) => largo[i] === x) || corto.every((x, i) => largo[largo.length - n + i] === x);
+    };
+    for (const a of lista) {
+      if (a.t.length >= 2) {
+        const cand = lista.filter((b) => b !== a && contiene(b.t, a.t) && unibles(a.k, b.k));
+        const max = cand.filter((b) => !cand.some((c) => c !== b && contiene(c.t, b.t)));
+        if (cand.length && max.length === 1) padre.set(a.k, max[0].k);
+      } else {
+        const cand = new Set();
+        for (const obra of a.obras) for (const b of lista) if (b.t.length >= 2 && b.obras.has(obra) && (b.t[0] === a.t[0] || b.t[b.t.length - 1] === a.t[0]) && unibles(a.k, b.k)) cand.add(b.k);
+        if (cand.size === 1) padre.set(a.k, [...cand][0]);
+      }
+    }
+    const bien = (s) => s.split(/\s+/).filter(Boolean).every((p) => PARTICULAS.has(p.toLowerCase()) ? p === p.toLowerCase() : /^[\p{Lu}]/u.test(p));
+    const tildes = (s) => (s.match(/[^\x00-\x7f]/g) || []).length;
+    const mostrar = new Map();
+    for (const g of lista) { const r = raiz(g.k); const m = mostrar.get(r) || new Map(); for (const [f, c] of g.formas) m.set(f, (m.get(f) || 0) + c); mostrar.set(r, m); }
+    const elegido = new Map();
+    for (const [r, m] of mostrar) {
+      const guiones = (s) => (s.match(/-/g) || []).length;   /* "Elena-Álvaro" es una errata si también aparece sin guion; "García-Mauriño" se respeta */
+      const mejor = [...m.entries()].sort((a, b) => fichas(b[0]).length - fichas(a[0]).length || bien(b[0]) - bien(a[0]) || guiones(a[0]) - guiones(b[0]) || tildes(b[0]) - tildes(a[0]) || b[1] - a[1])[0][0];
+      elegido.set(r, mejor.replace(/\s+/g, ' ').trim().split(' ').map((p, i) => i && PARTICULAS.has(p.toLowerCase()) ? p.toLowerCase() : p.charAt(0).toUpperCase() + p.slice(1)).join(' '));
+    }
+    window.ndcSueltos = lista.filter((g) => g.t.length === 1 && raiz(g.k) === g.k).map((g) => [...g.formas.keys()][0]);
+    window.ndcNombres = [...grupos.values()].filter((g) => raiz(g.k) !== g.k || g.formas.size > 1).map((g) => [...g.formas.keys()].join(' / ') + ' → ' + elegido.get(raiz(g.k)));
+    return (n) => { const visible = alias.get(llano(n)) || n, k = fichas(visible).join(' '); return grupos.has(k) ? elegido.get(raiz(k)) : visible; };
+  };
+
+  const monta = (libros) => {
+    const sesiones = [], bizums = [], obras = [], gastos = [], cuenta = [], registro = [];
+    const anota = (n, obra) => registro.push({ nombre: n, obra });
+    const obraDeLibro = new Map();                         /* libro → obra, para la hoja de gastos de cada Excel */
+    for (const libro of libros) for (const hoja of [...libro].sort((a, b) => /gasto/i.test(a.nombre) - /gasto/i.test(b.nombre))) {
+      const fi = hoja.filas.findIndex((f) => f && f.filter((x) => x != null).length >= 2); if (fi < 0) continue;
+      const cab = hoja.filas[fi].map(llano), cuerpo = hoja.filas.slice(fi + 1).filter((f) => f && f.some((x) => x != null));
+      const col = (...claves) => cab.findIndex((c) => c && claves.some((k) => (k instanceof RegExp ? k.test(c) : c === k)));
+      const cSesion = col('sesion', /^sesion\b/), cFecha = col('fecha');
+      if (cSesion >= 0 && cFecha >= 0) {                    /* hoja de una obra */
+        /* El título sale del nombre de la hoja. Si la hoja se llama "Hoja1" o Excel la cortó
+           (máximo 31 caracteres), se toma del nombre del archivo: Recaudacion_Mi_Obra.xlsx → Mi Obra */
+        const delArchivo = String(hoja.archivo || '').replace(/\.xlsx$/i, '').replace(/^recaudaci[oó]n[\s_-]*/i, '').replace(/[_]+/g, ' ').trim();
+        const generica = /^(hoja|sheet|feuil|blad)\s*\d*$/i.test(String(hoja.nombre).trim());
+        const cortada = delArchivo && llano(delArchivo).length > llano(hoja.nombre).length && llano(delArchivo).startsWith(llano(hoja.nombre));
+        const nombre = (generica || cortada) && delArchivo ? delArchivo : hoja.nombre;
+        const obra = llano(nombre).replace(/ /g, '-');
+        const c = { dia: col('dia'), hora: col('hora'), lugar: col(/^lugar/), efectivo: col('efectivo'), bizum: col('bizum'), digital: col('digital'),
+          tpv: col('tpv', /^tpv\b/, /^tarjeta/, /^datafono/), qr: col('qr', /^qr\b/, /^pasarela/, /^pago online/), asistentes: col('asistentes', /^asistentes/), aforo: col('aforo'),
+          act: cab.map((x, i) => (/^(protagonistas|ensemble|actores|actrices|reparto|elenco)\b/.test(x || '') ? i : -1)).filter((i) => i >= 0), tec: col(/^tecnicos/), dir: col(/^director/, /^direccion/) };
+        const pares = cab.map((x, i) => { const m = /^receptor bizum\s*(\d*)$/.exec(x || ''); return m ? { receptor: i, importe: cab.findIndex((y) => y && new RegExp('^recaudacion bizum\\s*' + m[1] + '$').test(y)) } : null; }).filter((x) => x && x.importe >= 0);
+        const ficha = { obra, titulo: titulo(nombre), descripcion: null, lugar: null, lugares: [], direccion: null };
+        obras.push(ficha);
+        if (!obraDeLibro.has(libro)) obraDeLibro.set(libro, obra);
+        for (const f of cuerpo) {
+          const n = numero(f[cSesion]); if (n == null) continue;         /* salta la fila TOTAL */
+          let bizum = null;
+          for (const par of pares) { const imp = numero(f[par.importe]); if (imp == null) continue; bizum = (bizum || 0) + imp; if (imp && f[par.receptor]) { bizums.push({ obra, sesion: n, receptor: String(f[par.receptor]), importe: imp }); anota(String(f[par.receptor]), obra); } }
+          const efectivo = c.efectivo >= 0 ? numero(f[c.efectivo]) : null;
+          const tpv = c.tpv >= 0 ? numero(f[c.tpv]) : null, qr = c.qr >= 0 ? numero(f[c.qr]) : null;
+          /* Bizum: las columnas "Recaudación Bizum"; si no las hay, la columna Bizum;
+             y si solo hay "Digital" (Bizum + TPV + QR), lo que queda al restar TPV y QR */
+          if (bizum == null && c.bizum >= 0) bizum = numero(f[c.bizum]);
+          if (bizum == null && c.digital >= 0 && numero(f[c.digital]) != null) bizum = Math.max(0, Math.round((numero(f[c.digital]) - (tpv || 0) - (qr || 0)) * 100) / 100);
+          if (bizum == null && (efectivo != null || tpv != null || qr != null)) bizum = 0;
+          const lugar = c.lugar >= 0 && f[c.lugar] ? String(f[c.lugar]) : null;
+          if (lugar && !ficha.lugares.includes(lugar)) ficha.lugares.push(lugar);
+          const fila = { obra, sesion: n, fecha: aFecha(f[cFecha]), dia: c.dia >= 0 ? f[c.dia] : null, lugar, hora: c.hora >= 0 ? aHora(f[c.hora]) : null,
+            efectivo, bizum, tpv, qr, asistentes: c.asistentes >= 0 ? numero(f[c.asistentes]) : null, aforo: c.aforo >= 0 ? numero(f[c.aforo]) : null,
+            actores: c.act.flatMap((i) => lista(f[i])), tecnicos: c.tec >= 0 ? lista(f[c.tec]) : [], director: c.dir >= 0 ? lista(f[c.dir]) : [] };
+          [...fila.actores, ...fila.tecnicos, ...fila.director].forEach((p) => anota(p, obra));
+          sesiones.push(fila);
+        }
+        /* Lugar principal: donde se hicieron más funciones */
+        const cuentaLugar = (l) => sesiones.filter((s) => s.obra === obra && s.lugar === l).length;
+        ficha.lugares.sort((a, b) => cuentaLugar(b) - cuentaLugar(a));
+        ficha.lugar = ficha.lugares.join(' y ') || null;
+      } else if (cFecha >= 0 && col('saldo') >= 0) {        /* hoja del saldo del banco */
+        const cS = col('saldo'), cP = col(/^pendiente/), cN = col(/^concepto/, /^nota/);
+        for (const f of cuerpo) { const s = numero(f[cS]), d = aFecha(f[cFecha]); if (s != null && d) cuenta.push({ fecha: d, saldo: s, pendiente: cP >= 0 ? numero(f[cP]) : null, nota: cN >= 0 ? f[cN] : null }); }
+      } else if (col('gastos', /^gasto/) >= 0 && col('total', 'importe') >= 0 && col('obra') < 0) {
+        /* Hoja "Gastos" dentro del Excel de una obra. Dos formatos:
+           - solo una línea "Total" con los gastos de la obra;
+           - partidas (como Hamilton): Gastos, Total, Categoría, Tipo ("Gasto obra" / "Gastos generales grupo"), Fecha. La columna Pagador no se usa.
+             La fila TOTAL se ignora y las devoluciones (importes negativos) restan. */
+        const obra = obraDeLibro.get(libro); if (!obra) continue;
+        const cL = col('gastos', /^gasto/), cI = col('total', 'importe'), cK = col(/^categoria/), cT = col('tipo', /^tipo/);
+        const filas = cuerpo.map((f) => ({ etiqueta: f[cL] == null ? '' : String(f[cL]), importe: numero(f[cI]), f })).filter((x) => x.importe != null);
+        const partidas = filas.filter((x) => llano(x.etiqueta) !== 'total');
+        if (partidas.length) for (const x of partidas) {
+          const tipo = cT >= 0 && /grupo|general/.test(llano(x.f[cT])) ? 'grupo' : 'obra';
+          gastos.push({ fecha: cFecha >= 0 ? aFecha(x.f[cFecha]) : null, obra, concepto: x.etiqueta || 'Gasto', categoria: cK >= 0 && x.f[cK] ? titulo(String(x.f[cK])) : 'Sin categoría', importe: x.importe, tipo, total_obra: false });
+        }
+        else for (const x of filas) gastos.push({ fecha: null, obra, concepto: 'Gastos totales de la obra', categoria: null, importe: Math.abs(x.importe), tipo: 'obra', total_obra: true });
+      } else if (col('importe') >= 0 && col('concepto') >= 0) {   /* hoja de gastos */
+        const cI = col('importe'), cC = col('concepto'), cO = col('obra'), cK = col('categoria');
+        for (const f of cuerpo) { const imp = numero(f[cI]); if (!imp) continue; gastos.push({ fecha: cFecha >= 0 ? aFecha(f[cFecha]) : null, obra: cO >= 0 && f[cO] ? llano(f[cO]).replace(/ /g, '-') : null, concepto: f[cC] || 'Sin concepto', categoria: cK >= 0 ? f[cK] : null, importe: Math.abs(imp) }); }
+      }
+    }
+    /* "Jaime Abengozar" y "Jaime Abengózar" son la misma persona: se queda la forma más repetida */
+    const forma = normalizador(registro);
+    for (const s of sesiones) for (const k of ['actores', 'tecnicos', 'director']) s[k] = [...new Set(s[k].map(forma))].join('; ');
+    for (const b of bizums) b.receptor = forma(b.receptor);
+    return { sesiones, bizums, obras, gastos, cuenta };
+  };
+
+  const dash = (window.dash = {
+    data(id) {
+      if (!(id in calculos)) return { status: listo ? (id in datos ? 'ok' : 'missing') : 'loading', data: datos[id] || [] };
+      const c = calculos[id], entradas = c.inputs.map((i) => dash.data(i)), mal = entradas.find((e) => e.status !== 'ok');
+      if (mal) return { status: mal.status, data: null };
+      if (!(id in cache)) { try { cache[id] = c.fn(...entradas.map((e) => e.data)); } catch (e) { console.error('Cálculo ' + id, e); return { status: 'error', data: null }; } }
+      return { status: 'ok', data: cache[id] };
+    },
+    calc(id, def) { calculos[id] = def; },
+    draw(nombre, fn) { if (typeof fn === 'function') { dibujos[nombre] = fn; return; } pinta(nombre); },
+    setLink(nombre) { try { history.replaceState(null, '', '#' + nombre); } catch (e) {} },
+    async start() {
+      pintaTodo();
+      /* Cada Excel se carga por separado: si falta uno, el resto se muestra igual */
+      const libros = await Promise.all(ARCHIVOS.map(async (n) => {
+        try {
+          const r = await fetch('data/' + encodeURIComponent(n), { cache: 'no-store' });
+          if (!r.ok) throw new Error('data/' + n + ' (' + r.status + ')');
+          return await leeXlsx(await r.arrayBuffer(), n);
+        } catch (e) { console.warn('No se pudo leer ' + n, e); return null; }
+      }));
+      if (libros.some(Boolean)) carga(libros.filter(Boolean)); else aviso(true);
+    },
+  });
+  const carga = (libros) => { Object.assign(datos, monta(libros)); cache = {}; listo = true; aviso(false); pintaTodo(); };
+
+  /* Si el navegador no deja leer data/ (panel abierto con doble clic), se elige el Excel a mano */
+  const aviso = (ver) => { const a = document.getElementById('ndc-aviso'); if (a) a.hidden = !ver; };
+  const entrada = document.getElementById('ndc-archivo');
+  if (entrada) entrada.addEventListener('change', async () => {
+    try { carga(await Promise.all([...entrada.files].map(async (f) => leeXlsx(await f.arrayBuffer(), f.name)))); }
+    catch (e) { console.error(e); alert('No he podido leer ese archivo: ' + e.message); }
+  });
+
+  const pinta = (nombre) => {
+    const fn = dibujos[nombre]; if (!fn) return;
+    document.querySelectorAll('[data-draw="' + nombre + '"]').forEach((el) => {
+      if (el.closest('[hidden]')) return;                   /* lo oculto no se dibuja hasta que se muestra */
+      try { fn(el); } catch (e) { console.error('Dibujo ' + nombre, e); }
+    });
+  };
+  const pintaTodo = () => Object.keys(dibujos).forEach(pinta);
+  let pendiente = 0;
+  const luego = () => { cancelAnimationFrame(pendiente); pendiente = requestAnimationFrame(pintaTodo); };
+  document.querySelectorAll('.ndc-page, #obras-lista, #obra-ficha').forEach((s) => new MutationObserver(luego).observe(s, { attributes: true, attributeFilter: ['hidden'] }));
+  let ancho = window.innerWidth, t = 0;
+  window.addEventListener('resize', () => { if (window.innerWidth === ancho) return; ancho = window.innerWidth; clearTimeout(t); t = setTimeout(pintaTodo, 150); });
+})();
+
+/* ===== 2. Cálculos y visualizaciones ===== */
+/* ===== Cálculos: todo número que no viene tal cual de los ficheros se obtiene aquí ===== */
+dash.calc('funciones', {
+  title: 'Funciones con sus totales',
+  description: 'Cada función con su recaudación total (efectivo, Bizum, TPV y QR), su ocupación y lo recaudado por espectador. Una función sin datos anotados cuenta como pendiente.',
+  inputs: ['sesiones'],
+  fn: (sesiones) => sesiones.map((s) => {
+    const num = (v) => (v == null || v === '' || isNaN(+v) ? null : +v);
+    const efectivo = num(s.efectivo), bizum = num(s.bizum), tpv = num(s.tpv), qr = num(s.qr), asistentes = num(s.asistentes), aforo = num(s.aforo);
+    const celebrada = efectivo != null || bizum != null || tpv != null || qr != null || asistentes != null;
+    const total = celebrada ? Math.round(((efectivo || 0) + (bizum || 0) + (tpv || 0) + (qr || 0)) * 100) / 100 : null;
+    return {
+      obra: s.obra, sesion: +s.sesion, fecha: s.fecha, dia: s.dia, hora: s.hora, lugar: s.lugar || null, celebrada,
+      /* Sin datos y con fecha ya pasada: "Sin datos". Sin datos y por llegar: "Pendiente" */
+      sin_datos: !celebrada && !!s.fecha && s.fecha < new Date().toISOString().slice(0, 10),
+      efectivo, bizum, tpv, qr, total, asistentes, aforo,
+      ocupacion: asistentes != null && aforo ? asistentes / aforo * 100 : null,
+      por_asistente: total != null && asistentes ? total / asistentes : null,
+    };
+  }),
+});
+
+dash.calc('obras_stats', {
+  title: 'Resumen por obra',
+  description: 'Totales de cada obra sobre sus funciones ya celebradas: recaudación, asistentes, ocupación, medias, gastos (de la obra y del grupo) y beneficio. Sin gastos anotados, el beneficio queda vacío.',
+  inputs: ['obras', 'funciones', 'gastos'],
+  fn: (obras, funciones, gastos) => obras.map((o) => {
+    const r2 = (x) => Math.round(x * 100) / 100;
+    const suma = (filas, campo) => r2(filas.reduce((t, f) => t + (+f[campo] || 0), 0));
+    const todas = funciones.filter((f) => f.obra === o.obra);
+    const hechas = todas.filter((f) => f.celebrada);
+    const fechas = todas.map((f) => f.fecha).filter(Boolean).sort();
+    const recaudacion = suma(hechas, 'total'), efectivo = suma(hechas, 'efectivo'), bizum = suma(hechas, 'bizum'), tpv = suma(hechas, 'tpv'), qr = suma(hechas, 'qr');
+    /* Asistentes, ocupación y euros por espectador solo cuentan funciones con asistentes anotados
+       (y la ocupación, además, con aforo), para no mezclar dinero o butacas sin su público */
+    const conPublico = hechas.filter((f) => f.asistentes != null), conAforo = conPublico.filter((f) => f.aforo);
+    const asistentes = suma(conPublico, 'asistentes'), aforo = suma(conAforo, 'aforo');
+    const recaudacion_con_publico = suma(conPublico, 'total');
+    const susGastos = gastos.filter((g) => g.obra === o.obra);
+    const gasto = susGastos.length ? suma(susGastos, 'importe') : null;
+    const gasto_grupo = susGastos.length ? suma(susGastos.filter((g) => g.tipo === 'grupo'), 'importe') : null;
+    const gasto_obra = gasto == null ? null : r2(gasto - gasto_grupo);
+    return {
+      obra: o.obra, titulo: o.titulo, descripcion: o.descripcion, lugar: o.lugar, direccion: o.direccion,
+      primera_fecha: fechas[0] || null, ultima_fecha: fechas[fechas.length - 1] || null,
+      funciones_programadas: todas.length, funciones: hechas.length,
+      recaudacion, efectivo, bizum, tpv, qr, pct_bizum: recaudacion ? bizum / recaudacion * 100 : null,
+      asistentes: conPublico.length ? asistentes : null, aforo, funciones_con_publico: conPublico.length, funciones_con_aforo: conAforo.length, recaudacion_con_publico,
+      ocupacion: aforo ? suma(conAforo, 'asistentes') / aforo * 100 : null,
+      media_funcion: hechas.length ? recaudacion / hechas.length : null,
+      por_asistente: asistentes ? recaudacion_con_publico / asistentes : null,
+      /* Sin recaudación anotada el beneficio no se calcula: saldría la pérdida completa sin serlo */
+      gasto, gasto_obra, gasto_grupo, desglosado: susGastos.some((g) => !g.total_obra),
+      beneficio: gasto == null || !hechas.length ? null : r2(recaudacion - gasto),
+      /* Beneficio sin contar lo que se compró para el grupo (material que se queda para futuras obras) */
+      beneficio_obra: gasto == null || !hechas.length ? null : r2(recaudacion - gasto_obra),
+    };
+  }),
+});
+
+dash.calc('totales', {
+  title: 'KPI clave de la compañía',
+  description: 'KPI clave: recaudación media por obra, donación media por espectador, asistentes y capacidad medios por función, y número de obras.',
+  inputs: ['obras_stats', 'funciones'],
+  fn: (obras_stats, funciones) => {
+    const hechas = funciones.filter((f) => f.celebrada);
+    const conFunciones = obras_stats.filter((o) => o.funciones > 0);
+    const recaudacion = obras_stats.reduce((t, o) => t + o.recaudacion, 0);
+    const asistentes = obras_stats.reduce((t, o) => t + (o.asistentes || 0), 0);
+    const conPublico = obras_stats.reduce((t, o) => t + o.funciones_con_publico, 0);
+    const recConPublico = obras_stats.reduce((t, o) => t + o.recaudacion_con_publico, 0);
+    const conOcupacion = hechas.filter((f) => f.ocupacion != null);
+    return [{
+      media_obra: conFunciones.length ? recaudacion / conFunciones.length : null,
+      por_espectador: asistentes ? recConPublico / asistentes : null,
+      asistentes_funcion: conPublico ? asistentes / conPublico : null,
+      capacidad_funcion: conOcupacion.length ? conOcupacion.reduce((t, f) => t + f.ocupacion, 0) / conOcupacion.length : null,
+      obras: obras_stats.length,
+    }];
+  },
+});
+
+dash.calc('saldo_actual', {
+  title: 'Saldo actual de la cuenta',
+  description: 'La anotación de saldo más reciente, con lo que quede pendiente de cobro.',
+  inputs: ['cuenta'],
+  fn: (cuenta) => cuenta.filter((c) => c.fecha && c.saldo != null && c.saldo !== '')
+    .sort((a, b) => String(a.fecha).localeCompare(String(b.fecha))).slice(-1)
+    .map((c) => ({ fecha: c.fecha, saldo: +c.saldo, pendiente: c.pendiente == null || c.pendiente === '' ? null : +c.pendiente, nota: c.nota || null })),
+});
+
+dash.calc('personas', {
+  title: 'Participación de cada persona',
+  description: 'En cuántas obras y funciones ha participado cada actor, técnico y director, por obra y en el conjunto ("todas"). Cuenta todas las funciones del Excel, tengan o no recaudación anotada.',
+  inputs: ['sesiones'],
+  fn: (sesiones) => {
+    const lista = (t) => String(t || '').split(';').map((x) => x.trim()).filter(Boolean);
+    const mapa = new Map();
+    for (const s of sesiones)
+      for (const [campo, grupo] of [['actores', 'actores'], ['tecnicos', 'tecnicos'], ['director', 'direccion']])
+        for (const p of new Set(lista(s[campo])))
+          for (const ambito of [s.obra, 'todas']) {
+            const k = ambito + '|' + grupo + '|' + p;
+            const r = mapa.get(k) || { obra: ambito, persona: p, grupo, obras: new Set(), funciones: 0 };
+            r.obras.add(s.obra); r.funciones += 1; mapa.set(k, r);
+          }
+    return [...mapa.values()].map((r) => ({ obra: r.obra, persona: r.persona, grupo: r.grupo, obras: r.obras.size, funciones: r.funciones }));
+  },
+});
+
+dash.calc('bizum_receptores', {
+  title: 'Bizum recibidos por persona',
+  description: 'Importe total de Bizum que ha recibido cada persona en cada obra y en cuántas funciones.',
+  inputs: ['bizums'],
+  fn: (bizums) => {
+    const mapa = new Map();
+    for (const b of bizums) {
+      const importe = +b.importe;
+      if (!b.receptor || !importe) continue;
+      const k = b.obra + '|' + b.receptor;
+      const r = mapa.get(k) || { obra: b.obra, receptor: b.receptor, importe: 0, funciones: 0 };
+      r.importe = Math.round((r.importe + importe) * 100) / 100; r.funciones += 1;
+      mapa.set(k, r);
+    }
+    return [...mapa.values()].sort((a, b) => b.importe - a.importe);
+  },
+});
+
+dash.calc('gastos_desglose', {
+  title: 'Gastos de cada obra, desglosados',
+  description: 'Por obra: gastos propios de la obra por categoría y gastos generales del grupo (material que se queda para futuras obras). Las obras que solo tienen el total aparecen como "sin desglosar".',
+  inputs: ['gastos'],
+  fn: (gastos) => {
+    const r2 = (x) => Math.round(x * 100) / 100, mapa = new Map();
+    for (const g of gastos) {
+      if (!g.obra || !+g.importe) continue;
+      const r = mapa.get(g.obra) || { obra: g.obra, total: 0, obra_total: 0, grupo_total: 0, sin_desglosar: 0, cat_obra: {}, cat_grupo: {} };
+      const imp = +g.importe; r.total += imp;
+      if (g.total_obra) r.sin_desglosar += imp;
+      else if (g.tipo === 'grupo') { r.grupo_total += imp; r.cat_grupo[g.categoria] = (r.cat_grupo[g.categoria] || 0) + imp; }
+      else { r.obra_total += imp; r.cat_obra[g.categoria] = (r.cat_obra[g.categoria] || 0) + imp; }
+      mapa.set(g.obra, r);
+    }
+    const lista = (o) => Object.entries(o).map(([categoria, importe]) => ({ categoria, importe: r2(importe) })).filter((x) => x.importe > 0).sort((a, b) => b.importe - a.importe);
+    return [...mapa.values()].map((r) => ({ obra: r.obra, total: r2(r.total), obra_total: r2(r.obra_total + r.sin_desglosar), grupo_total: r2(r.grupo_total),
+      sin_desglosar: r2(r.sin_desglosar), categorias_obra: lista(r.cat_obra), categorias_grupo: lista(r.cat_grupo) }));
+  },
+});
+
+/* ===== Utilidades de dibujo ===== */
+(() => {
+  const N = (window.ndc = { obra: null, seen: new Set(), more: new Set() });
+  const motion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: no-preference)').matches;
+  const nf0 = new Intl.NumberFormat('de-DE', { maximumFractionDigits: 0 });
+  const nf1 = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+  const nf2 = new Intl.NumberFormat('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  const eur = (v) => (v == null ? '—' : (Math.abs(v - Math.round(v)) < 0.005 ? nf0.format(v) : nf2.format(v)) + '\u00a0€');
+  const ent = (v) => (v == null ? '—' : nf0.format(v));
+  const pct = (v) => (v == null ? '—' : nf1.format(v) + ' %');
+  const MES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+  const partes = (s) => { const m = /^(\d{4})-(\d{2})-(\d{2})/.exec(String(s || '')); return m ? { y: +m[1], m: +m[2], d: +m[3] } : null; };
+  const fecha = (s, conAnio) => { const p = partes(s); return p ? p.d + ' ' + MES[p.m - 1] + (conAnio ? ' ' + p.y : '') : '—'; };
+  const eur2 = (v) => (v == null ? '—' : nf2.format(v) + '\u00a0€');
+  /* Métodos de pago, de abajo arriba en las barras. TPV y QR solo aparecen en las obras que los usan */
+  const METODOS = [
+    { k: 'efectivo', nombre: 'Efectivo', sw: 'ndc-sw-ef', fill: '#15130F' },
+    { k: 'bizum', nombre: 'Bizum', sw: 'ndc-sw-bz', fill: '#FFE500' },
+    { k: 'tpv', nombre: 'TPV (tarjeta)', sw: 'ndc-sw-tpv', fill: '#E9A31C' },
+    { k: 'qr', nombre: 'QR online', sw: 'ndc-sw-qr', fill: 'url(#ndc-rayas)' },
+  ];
+  /* Colores fijos por categoría de gasto, para que cada una sea igual en todo el panel */
+  const CAT_COLOR = { vestuario: '#E9A31C', ensayos: '#C4532D', papeleria: '#2F6F8F', decorados: '#6B8F3A', atrezzo: '#8A5BA8',
+    comida: '#D97A9B', luces: '#F2CF3A', sonido: '#3E9EA0', 'sin categoria': '#9C9480' };
+  const CAT_EXTRA = ['#B5651D', '#5C7CBA', '#A34C6B', '#7A9E7E', '#C9A227', '#6D5A8F'];
+  const colorCat = (c) => {
+    const k = String(c || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase().trim();
+    if (CAT_COLOR[k]) return CAT_COLOR[k];
+    CAT_COLOR[k] = CAT_EXTRA[Object.keys(CAT_COLOR).length % CAT_EXTRA.length]; return CAT_COLOR[k];
+  };
+  const desgloseDe = (obra) => (dash.data('gastos_desglose').data || []).find((d) => d.obra === obra) || null;
+  /* Barra de gastos: primero los de la obra (por categoría), después los del grupo (rayado); "sin desglosar" si solo hay el total.
+     escala: euros que ocupan el 100 % del ancho, para comparar obras en la misma escala */
+  const barraGastos = (d, escala, alto) => {
+    const w = (v) => Math.max(0, v / escala * 100).toFixed(3);
+    const seg = (cls, v, titulo, color) => h('i', { class: 'ndc-seg-g ' + cls, 'data-w': w(v), title: titulo, style: color ? 'background:' + color : null });
+    const piezas = [];
+    if (d.sin_desglosar > 0) piezas.push(seg('is-sin', d.sin_desglosar, 'Gastos de la obra sin desglosar: ' + eur(d.sin_desglosar)));
+    for (const c of d.categorias_obra) piezas.push(seg('', c.importe, c.categoria + ' (obra): ' + eur(c.importe) + ' · ' + nf0.format(c.importe / d.total * 100) + ' % del gasto', colorCat(c.categoria)));
+    if (d.grupo_total > 0) piezas.push(seg('is-grupo', d.grupo_total, 'Gastos del grupo: ' + eur(d.grupo_total) + ' · ' + nf0.format(d.grupo_total / d.total * 100) + ' % del gasto'));
+    return h('div', { class: 'ndc-stack' + (alto ? ' is-alto' : ''), role: 'img', 'aria-label': 'Gastos: ' + eur(d.total) + (d.grupo_total ? ', de ellos ' + eur(d.grupo_total) + ' del grupo' : '') }, piezas);
+  };
+  const leyendaGastos = (desgloses) => {
+    const cats = new Map();
+    for (const d of desgloses) for (const c of d.categorias_obra) cats.set(c.categoria, (cats.get(c.categoria) || 0) + c.importe);
+    const pieza = (estilo, cls, texto) => h('span', {}, h('i', { class: 'ndc-sw ' + (cls || ''), style: estilo }), texto);
+    return h('div', { class: 'ndc-legend ndc-legend-gastos' },
+      [...cats.entries()].sort((a, b) => b[1] - a[1]).map(([c]) => pieza('background:' + colorCat(c), '', c)),
+      desgloses.some((d) => d.grupo_total > 0) ? pieza(null, 'ndc-sw-grupo', 'Gastos del grupo (material que se queda)') : '',
+      desgloses.some((d) => d.sin_desglosar > 0) ? pieza(null, 'ndc-sw-sin', 'Gastos de la obra sin desglosar') : '');
+  };
+  const metodosDe = (filas) => METODOS.filter((m) => m.k === 'efectivo' || filas.some((f) => (f[m.k] || 0) > 0));
+  const FMT = { media_obra: eur, por_espectador: eur2, asistentes_funcion: ent, capacidad_funcion: pct, recaudacion: eur, media_funcion: eur, por_asistente: eur2, gasto: eur, total: eur, efectivo: eur, bizum: eur, tpv: eur, qr: eur, gasto_obra: eur, gasto_grupo: eur, beneficio: (v) => (v == null ? '—' : (v >= 0 ? '+' : '−') + eur(Math.abs(v))), beneficio_obra: (v) => (v == null ? '—' : (v >= 0 ? '+' : '−') + eur(Math.abs(v))), asistentes: ent, funciones: ent, obras: ent, ocupacion: pct };
+
+  const h = (tag, props, ...kids) => {
+    const e = document.createElement(tag);
+    for (const [k, v] of Object.entries(props || {})) {
+      if (v == null || v === false) continue;
+      if (k === 'class') e.className = v; else if (k === 'text') e.textContent = v;
+      else if (k === 'style') e.style.cssText = v; else e.setAttribute(k, v === true ? '' : v);
+    }
+    for (const k of kids.flat()) if (k != null && k !== false) e.append(k);
+    return e;
+  };
+  const estado = (ids) => {
+    const st = ids.map((id) => dash.data(id).status);
+    if (st.every((s) => s === 'ok')) return 'ok';
+    return st.some((s) => s === 'error' || s === 'missing') ? 'error' : 'loading';
+  };
+  const espera = (el, st) => {
+    if (el.tagName === 'TBODY' || el.tagName === 'UL' || el.tagName === 'OL') { el.replaceChildren(); return; }
+    el.replaceChildren(st === 'error' ? h('span', { class: 'ndc-fail', text: 'No se han podido cargar los datos.' }) : '—');
+  };
+  const vacio = (el, si) => { const p = el.parentElement && el.parentElement.querySelector(':scope > .ndc-empty'); if (p && p.hidden !== !si) p.hidden = !si; };
+  const primera = (clave) => { if (N.seen.has(clave)) return false; N.seen.add(clave); return motion; };
+  const crece = (root, animar) => {
+    const barras = [...root.querySelectorAll('[data-w]')];
+    if (!animar) { barras.forEach((b) => { b.style.transition = 'none'; b.style.width = b.dataset.w + '%'; }); return; }
+    requestAnimationFrame(() => requestAnimationFrame(() => barras.forEach((b, i) => { b.style.transitionDelay = Math.min(i * 45, 500) + 'ms'; b.style.width = b.dataset.w + '%'; })));
+  };
+  const cuenta = (el, valor, fmt, animar) => {
+    if (!animar || valor == null) { el.textContent = fmt(valor); return; }
+    const t0 = performance.now(), dur = 900, entero = Number.isInteger(valor);
+    const paso = (t) => {
+      const k = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - k, 3);
+      el.textContent = fmt(k === 1 ? valor : entero ? Math.round(valor * e) : Math.round(valor * e));
+      if (k < 1) requestAnimationFrame(paso);
+    };
+    requestAnimationFrame(paso);
+  };
+  const ctl = (id, nombre, def) => {
+    const b = document.querySelector('.ndc-seg[data-for="' + id + '"][data-ctl="' + nombre + '"] [aria-pressed="true"]');
+    return b ? b.dataset.val : def;
+  };
+  const obraActual = () => (dash.data('obras_stats').data || []).find((o) => o.obra === N.obra) || null;
+
+  /* Lista ordenada con barras que nacen en cero */
+  const ranking = (filas, o) => {
+    const max = o.max != null ? o.max : Math.max(0, ...filas.map((f) => f.valor || 0));
+    return h('ol', { class: 'ndc-rank' }, filas.map((f) => {
+      const puesto = 1 + filas.filter((g) => g.valor > f.valor + 1e-9).length;
+      const empate = filas.filter((g) => Math.abs(g.valor - f.valor) < 1e-9).length > 1;
+      const cuerpo = [
+        h('span', { class: 'ndc-pos', text: puesto + (empate ? '=' : '') , title: empate ? 'Empate' : null }),
+        h('div', { class: 'ndc-rank-main' },
+          h('div', { class: 'ndc-rank-head' }, h('span', { class: 'ndc-rank-name', text: f.nombre }), h('span', { class: 'ndc-rank-val', text: o.fmt(f.valor) })),
+          h('div', { class: 'ndc-bar' + (o.claseBarra ? ' ' + o.claseBarra : '') }, h('i', { 'data-w': max ? Math.max(0, Math.min(100, f.valor / max * 100)).toFixed(2) : 0 })),
+          f.sub ? h('div', { class: 'ndc-rank-sub', text: f.sub }) : null),
+      ];
+      const cls = 'ndc-rank-row' + (puesto === 1 && filas.length > 1 ? ' is-first' : filas.length === 1 ? ' is-first' : '');
+      if (o.alPulsar) {
+        const b = h('button', { type: 'button', class: cls + ' ndc-row-btn', 'aria-label': 'Abrir ' + f.nombre }, cuerpo);
+        b.addEventListener('click', () => o.alPulsar(f));
+        return h('li', {}, b);
+      }
+      return h('li', { class: cls }, cuerpo);
+    }));
+  };
+
+  /* ===== Visión general ===== */
+  dash.draw('saldo', (el) => {
+    const st = estado(['saldo_actual']); if (st !== 'ok') return espera(el, st);
+    const r = dash.data('saldo_actual').data[0];
+    el.classList.toggle('is-neg', !!r && r.saldo < 0);
+    cuenta(el, r ? r.saldo : null, (v) => (v != null && v < 0 ? '−' + eur(Math.abs(v)) : eur(v)), r && primera('saldo'));
+  });
+  dash.draw('saldo-fecha', (el) => {
+    const st = estado(['saldo_actual']); if (st !== 'ok') return espera(el, st);
+    const r = dash.data('saldo_actual').data[0];
+    el.textContent = r ? fecha(r.fecha, true) : '—';
+  });
+  dash.draw('saldo-pendiente', (el) => {
+    const st = estado(['saldo_actual']); if (st !== 'ok') return el.replaceChildren();
+    const r = dash.data('saldo_actual').data[0];
+    if (!r || !r.pendiente) return el.replaceChildren();
+    const tras = r.saldo + r.pendiente, firma = (v) => (v < 0 ? '−' : '') + eur(Math.abs(v));
+    el.replaceChildren(
+      h('div', {}, h('span', { text: (r.nota || 'Pendiente de cobro') }), h('b', { text: '+' + eur(r.pendiente) })),
+      h('div', {}, h('span', { text: 'Saldo cuando llegue' }), h('b', { class: tras < 0 ? 'is-neg' : '', text: firma(tras) })));
+  });
+  dash.draw('ultimos-gastos', (el) => {
+    const st = estado(['gastos', 'obras']); if (st !== 'ok') { vacio(el, false); return espera(el, st); }
+    const obras = dash.data('obras').data;
+    /* Solo gastos con fecha: los totales por obra de cada Excel van en el histórico de beneficios */
+    const filas = dash.data('gastos').data.filter((g) => +g.importe && g.fecha && !g.total_obra).sort((a, b) => String(b.fecha).localeCompare(String(a.fecha)) || Math.abs(b.importe) - Math.abs(a.importe)).slice(0, 6);
+    vacio(el, !filas.length);
+    el.replaceChildren(...filas.map((g) => {
+      const o = obras.find((x) => x.obra === g.obra);
+      return h('li', {}, h('span', { class: 'ndc-when', text: fecha(g.fecha) }),
+        h('span', {}, g.concepto, h('small', { class: 'ndc-mini-sub', text: [o ? o.titulo : null, g.categoria, g.tipo === 'grupo' ? 'gasto del grupo' : null].filter(Boolean).join(' · ') })),
+        h('span', { class: 'ndc-amt' + (g.importe < 0 ? ' is-good' : ''), text: (g.importe < 0 ? '+' : '−') + eur(Math.abs(+g.importe)) }));
+    }));
+  });
+  dash.draw('total', (el) => {
+    const st = estado(['totales']); if (st !== 'ok') return espera(el, st);
+    const campo = el.dataset.field, v = dash.data('totales').data[0][campo];
+    cuenta(el, v, FMT[campo] || ent, primera('total-' + campo));
+  });
+  dash.draw('rank-obras', (el) => {
+    const st = estado(['obras_stats']); if (st !== 'ok') return espera(el, st);
+    const m = ctl(el.id, 'metric', el.id === 'rank-publico' ? 'asistentes' : 'recaudacion');
+    const pista = document.querySelector('[data-hint-for="' + el.id + '"]'); if (pista && pista.dataset[m]) pista.textContent = pista.dataset[m];
+    const filas = dash.data('obras_stats').data.filter((o) => o.funciones > 0 && o[m] != null)
+      .map((o) => ({
+        id: o.obra, nombre: o.titulo, valor: o[m],
+        sub: m === 'ocupacion' ? ent(o.asistentes) + ' de ' + ent(o.aforo) + ' butacas en ' + o.funciones_con_aforo + (o.funciones_con_aforo === 1 ? ' función' : ' funciones') + (o.funciones_con_aforo < o.funciones ? ' con datos de público' : '')
+          : m === 'media_funcion' ? o.funciones + (o.funciones === 1 ? ' sesión con datos' : ' sesiones con datos')
+          : m === 'asistentes' ? (o.funciones_con_publico + ' de ' + o.funciones_programadas + ' funciones con asistentes anotados')
+          : o.funciones + ' de ' + o.funciones_programadas + ' funciones con recaudación anotada',
+      })).sort((a, b) => b.valor - a.valor);
+    if (!filas.length) return el.replaceChildren(h('span', { class: 'ndc-fail', text: 'Aún no hay funciones con datos.' }));
+    /* Obras sin el dato (por ejemplo, sin asistentes anotados) se nombran debajo en lugar de salir con cero */
+    const sinDato = dash.data('obras_stats').data.filter((o) => o[m] == null || (!o.funciones && m !== 'ocupacion' && m !== 'asistentes')).map((o) => o.titulo);
+    el.replaceChildren(ranking(filas, { fmt: FMT[m], max: m === 'ocupacion' ? Math.max(100, ...filas.map((f) => f.valor)) : null, alPulsar: (f) => N.abre(f.id) }),
+      sinDato.length ? h('p', { class: 'ndc-note', text: 'Sin datos: ' + sinDato.join(', ') + '.' }) : '');
+    crece(el, primera('rank-obras-' + el.id + '-' + m));
+  });
+  dash.draw('rank-personas', (el) => {
+    const st = estado(['personas']); if (st !== 'ok') return espera(el, st);
+    const enObra = el.dataset.scope === 'obra';
+    const grupo = enObra ? ctl(el.id, 'grupo', 'actores') : el.dataset.grupo;
+    const plural = (n, uno, varios) => nf0.format(n) + ' ' + (n === 1 ? uno : varios);
+    const todas = dash.data('personas').data.filter((p) => p.obra === 'todas' && p.grupo === grupo);
+    /* En la ficha: el equipo de esta obra, ordenado por sus obras en todo el histórico */
+    const base = enObra ? dash.data('personas').data.filter((p) => p.obra === N.obra && p.grupo === grupo) : todas;
+    const filas = base.map((p) => {
+      const g = enObra ? todas.find((t) => t.persona === p.persona) || p : p;
+      return { nombre: p.persona, valor: g.obras, n: g.funciones,
+        sub: enObra ? plural(p.funciones, 'función', 'funciones') + ' en esta obra' : plural(g.funciones, 'función', 'funciones') };
+    }).sort((a, b) => b.valor - a.valor || b.n - a.n || a.nombre.localeCompare(b.nombre, 'es'));
+    if (!filas.length) return el.replaceChildren(h('span', { class: 'ndc-fail', text: 'No hay nadie anotado en este grupo.' }));
+    const limite = enObra ? 12 : 5, clave = el.id + '-' + grupo, todo = N.more.has(clave), n = filas.length;
+    const kids = [ranking(todo ? filas : filas.slice(0, limite), { fmt: (v) => plural(v, 'obra', 'obras'), max: Math.max(...filas.map((f) => f.valor)) })];
+    if (enObra && n > limite) {
+      const b = h('button', { type: 'button', class: 'ndc-more', text: todo ? 'Ver menos' : 'Ver los ' + n });
+      b.addEventListener('click', () => { todo ? N.more.delete(clave) : N.more.add(clave); dash.draw('rank-personas'); });
+      kids.push(b);
+    }
+    el.replaceChildren(...kids);
+    crece(el, primera('personas-' + clave + '-' + (enObra ? N.obra : 'todas')));
+  });
+  dash.draw('beneficio', (el) => {
+    const st = estado(['obras_stats', 'gastos_desglose']); if (st !== 'ok') return espera(el, st);
+    const obras = dash.data('obras_stats').data.filter((o) => o.funciones > 0 || o.gasto != null)
+      .sort((a, b) => (b.beneficio == null ? -Infinity : b.beneficio) - (a.beneficio == null ? -Infinity : a.beneficio) || b.recaudacion - a.recaudacion);
+    if (!obras.length) return el.replaceChildren(h('span', { class: 'ndc-fail', text: 'Aún no hay datos.' }));
+    const max = Math.max(...obras.map((o) => Math.max(o.recaudacion, o.gasto || 0)));
+    const firma = (v) => (v >= 0 ? '+' : '−') + eur(Math.abs(v));
+    const desgloses = obras.map((o) => desgloseDe(o.obra)).filter(Boolean);
+    el.replaceChildren(leyendaGastos(desgloses), h('div', { class: 'ndc-ben' }, obras.map((o) => {
+      const d = desgloseDe(o.obra);
+      const cabecera = h('div', { class: 'ndc-ben-title' }, h('span', { text: o.titulo }),
+        o.beneficio == null ? h('span', { class: 'ndc-ben-res is-none', text: !o.funciones ? 'Falta la recaudación' : 'Faltan los gastos' })
+          : h('span', { class: 'ndc-ben-res ' + (o.beneficio >= 0 ? 'is-good' : 'is-bad'), text: firma(o.beneficio) }));
+      const rec = !o.funciones
+        ? h('div', { class: 'ndc-ben-line' }, h('span', { text: 'Recaudado' }), h('div', { class: 'ndc-bar is-void' }), h('b', { class: 'ndc-muted', text: 'Sin anotar' }))
+        : h('div', { class: 'ndc-ben-line' }, h('span', { text: 'Recaudado' }), h('div', { class: 'ndc-bar' }, h('i', { 'data-w': (o.recaudacion / max * 100).toFixed(2) })), h('b', { text: eur(o.recaudacion) }));
+      const gas = !d
+        ? h('div', { class: 'ndc-ben-line' }, h('span', { text: 'Gastos' }), h('div', { class: 'ndc-bar is-void' }), h('b', { class: 'ndc-muted', text: 'Sin anotar' }))
+        : h('div', { class: 'ndc-ben-line' }, h('span', { text: 'Gastos' }), h('div', { class: 'ndc-bar ndc-bar-stack' }, barraGastos(d, max)), h('b', { text: eur(d.total) }));
+      const nota = [];
+      if (d && d.grupo_total > 0) {
+        nota.push(h('span', {}, 'De la obra ', h('b', { text: eur(d.obra_total) }), ' (' + nf0.format(d.obra_total / d.total * 100) + ' %) · del grupo ', h('b', { text: eur(d.grupo_total) }), ' (' + nf0.format(d.grupo_total / d.total * 100) + ' %)'));
+        if (o.beneficio_obra != null) nota.push(h('span', {}, 'Sin los gastos del grupo, la obra deja ', h('b', { class: o.beneficio_obra >= 0 ? 'is-good' : 'is-bad', text: firma(o.beneficio_obra) })));
+      }
+      return h('div', { class: 'ndc-ben-item' }, cabecera, rec, gas, nota.length ? h('div', { class: 'ndc-ben-nota' }, nota) : '');
+    })));
+    crece(el, primera('beneficio'));
+  });
+
+  /* ===== Obras ===== */
+  const poster = (o) => {
+    const p = h('div', { class: 'ndc-poster', 'data-obra': o.obra, role: 'img', 'aria-label': 'Cartel de ' + o.titulo }, h('span', { text: String(o.titulo || '?').slice(0, 1) }));
+    /* El cartel se busca en assets/carteles/<obra>.jpg; si no existe queda el bloque amarillo con la inicial */
+    const src = 'assets/carteles/' + encodeURIComponent(o.obra) + '.jpg', img = new Image();
+    img.alt = ''; img.decoding = 'async';
+    img.onload = () => { p.classList.add('has-img'); p.append(img); };
+    img.src = src;
+    return p;
+  };
+  const marcaPoster = () => {};
+  const rango = (o) => {
+    const a = partes(o.primera_fecha), b = partes(o.ultima_fecha);
+    if (!a || !b) return 'Fechas por anotar';
+    if (o.primera_fecha === o.ultima_fecha) return fecha(o.primera_fecha, true);
+    return a.y === b.y && a.m === b.m ? 'Del ' + a.d + ' al ' + fecha(o.ultima_fecha, true) : 'Del ' + fecha(o.primera_fecha, a.y !== b.y) + ' al ' + fecha(o.ultima_fecha, true);
+  };
+  dash.draw('obras-grid', (el) => {
+    const st = estado(['obras_stats']); if (st !== 'ok') return espera(el, st);
+    const obras = dash.data('obras_stats').data.slice().sort((a, b) => String(b.primera_fecha || '').localeCompare(String(a.primera_fecha || '')));
+    el.replaceChildren(...obras.map((o, i) => {
+      const b = h('button', { type: 'button', class: 'ndc-obra-card', style: 'animation-delay:' + i * 80 + 'ms', 'aria-label': 'Abrir el panel de ' + o.titulo },
+        poster(o),
+        h('div', { class: 'ndc-obra-body' },
+          h('div', { class: 'ndc-obra-title', text: o.titulo }),
+          h('div', { class: 'ndc-obra-sub', text: [o.descripcion, o.lugar].filter(Boolean).join(' · ') }),
+          h('div', { class: 'ndc-obra-sub', text: rango(o) }),
+          h('div', { class: 'ndc-obra-stats' },
+            h('div', {}, h('b', { text: o.funciones ? eur(o.recaudacion) : '—' }), h('span', { text: 'recaudados' })),
+            h('div', {}, h('b', { text: ent(o.asistentes) }), h('span', { text: 'espectadores' })),
+            h('div', {}, h('b', { text: o.funciones + ' de ' + o.funciones_programadas }), h('span', { text: 'funciones' }))),
+          h('div', { class: 'ndc-obra-go', text: 'Ver el panel →' })));
+      b.addEventListener('click', () => N.abre(o.obra));
+      return b;
+    }));
+    marcaPoster(el);
+  });
+
+  dash.draw('obra-cabecera', (el) => {
+    const st = estado(['obras_stats', 'sesiones']); if (st !== 'ok') return espera(el, st);
+    const o = obraActual(); if (!o) return espera(el, 'loading');
+    const ses = dash.data('sesiones').data.filter((s) => s.obra === o.obra);
+    const unicos = (campo) => [...new Set(ses.flatMap((s) => String(s[campo] || '').split(';').map((x) => x.trim()).filter(Boolean)))];
+    const dir = unicos('director'), tec = unicos('tecnicos');
+    const puntos = h('span', { class: 'ndc-dots', 'aria-hidden': 'true' }, Array.from({ length: o.funciones_programadas }, (_, i) => h('i', { class: i < o.funciones ? 'is-on' : '', style: '--i:' + i })));
+    el.replaceChildren(poster(o), h('div', {},
+      h('h2', { class: 'ndc-ficha-title' + (String(o.titulo).length > 12 ? ' is-long' : ''), text: o.titulo }),
+      o.descripcion ? h('p', { class: 'ndc-ficha-sub', text: o.descripcion }) : null,
+      h('div', { class: 'ndc-ficha-meta' },
+        o.lugar ? h('span', {}, h('b', { text: o.lugar })) : null, o.direccion ? h('span', { text: o.direccion }) : null,
+        h('span', { text: rango(o) })),
+      h('div', { class: 'ndc-progress' }, puntos, h('span', {}, h('b', { text: o.funciones + ' de ' + o.funciones_programadas }), ' funciones con recaudación anotada')),
+      h('div', { class: 'ndc-team' },
+        dir.length ? h('div', {}, h('div', { class: 'ndc-team-label', text: 'Dirección' }), h('div', { class: 'ndc-chips' }, dir.map((n) => h('span', { class: 'ndc-chip', text: n })))) : null,
+        tec.length ? h('div', {}, h('div', { class: 'ndc-team-label', text: 'Equipo técnico' }), h('div', { class: 'ndc-chips' }, tec.map((n) => h('span', { class: 'ndc-chip', text: n })))) : null)));
+    marcaPoster(el);
+  });
+
+  dash.draw('obra-kpi', (el) => {
+    const st = estado(['obras_stats']); if (st !== 'ok') return espera(el, st);
+    const o = obraActual(); if (!o) return espera(el, 'loading');
+    const campo = el.dataset.field, v = !o.funciones && campo === 'recaudacion' ? null : o[campo];   /* sin funciones con datos, "—" y no 0 € */
+    const s = h('span', { 'data-source': 'obras_stats', 'data-field': campo, 'data-where': 'obra=' + encodeURIComponent(o.obra) });
+    el.replaceChildren(s);
+    if ((campo === 'beneficio' || campo === 'beneficio_obra') && v != null) s.style.color = v >= 0 ? 'var(--good)' : 'var(--bad)';
+    cuenta(s, v, FMT[campo] || ent, v != null && primera('obra-kpi-' + o.obra + '-' + campo + '-' + (el.closest('.ndc-balance') ? 'b' : 'k')));
+  });
+
+  dash.draw('obra-sesiones', (el) => {
+    const st = estado(['funciones']); if (st !== 'ok') return espera(el, st);
+    const filas = dash.data('funciones').data.filter((f) => f.obra === N.obra).sort((a, b) => a.sesion - b.sesion);
+    if (!filas.length) return el.replaceChildren(h('span', { class: 'ndc-fail', text: 'Esta obra aún no tiene funciones anotadas.' }));
+    const usados = metodosDe(filas.filter((f) => f.celebrada));
+    /* "Métodos de pago (%)" solo tiene sentido si la obra usó más de un método */
+    const botonMix = document.getElementById('boton-mix');
+    if (botonMix) botonMix.hidden = usados.length < 2;
+    let modo = ctl('obra-sesiones', 'metric', 'recaudacion');
+    if (modo === 'mix' && usados.length < 2) {
+      modo = 'recaudacion';
+      document.querySelectorAll('.ndc-seg[data-for="obra-sesiones"] button').forEach((x) => x.setAttribute('aria-pressed', String(x.dataset.val === 'recaudacion')));
+    }
+    const leyenda = document.getElementById('leyenda-sesiones');
+    if (leyenda) {
+      const pieza = (cls, texto) => h('span', {}, h('i', { class: 'ndc-sw ' + cls }), texto);
+      leyenda.replaceChildren(...(modo === 'asistentes'
+        ? [pieza('ndc-sw-ef', 'Asistentes'), pieza('ndc-sw-aforo', 'Aforo de la sala')]
+        : usados.map((m) => pieza(m.sw, m.nombre))),
+        filas.some((f) => f.sin_datos) ? pieza('ndc-sw-pend', 'Sin datos') : '', filas.some((f) => !f.celebrada && !f.sin_datos) ? pieza('ndc-sw-pend', 'Función pendiente') : '');
+    }
+    const animar = primera('sesiones-' + N.obra + '-' + modo);
+    const ancho = el.clientWidth || 600, W = Math.max(ancho, filas.length * 50 + 60), H = 320, desliza = W > ancho + 1;
+    const mayor = (campo) => Math.max(0, ...filas.map((f) => f[campo] || 0));
+    const bruto = modo === 'mix' ? 100 : modo === 'recaudacion' ? (mayor('total') || 1) * 1.14 : Math.max(mayor('aforo') || 1, mayor('asistentes')) * 1.1;
+    /* Eje con marcas redondas (1, 2 o 5 por potencia de diez) que siempre empieza en cero */
+    let paso = modo === 'mix' ? 25 : Math.pow(10, Math.floor(Math.log10(bruto / 4)));
+    const resto = bruto / 4 / paso; if (modo !== 'mix') paso *= resto >= 7.07 ? 10 : resto >= 3.16 ? 5 : resto >= 1.41 ? 2 : 1;
+    const tope = Math.ceil(bruto / paso) * paso, ticks = [];
+    for (let v = 0; v <= tope + paso / 2; v += paso) ticks.push(v);
+    const fmtTick = (v) => (modo === 'recaudacion' ? nf0.format(v) + ' €' : modo === 'mix' ? nf0.format(v) + ' %' : nf0.format(v));
+    const ml = Math.max(...ticks.map((t) => fmtTick(t).length)) * 7 + 14, mr = 6, mt = 26, mb = 46;
+    const y = (v) => H - mb - (v / tope) * (H - mb - mt);
+    const tramo = (W - mr - ml) / filas.length, bw = tramo * 0.68;
+    const s = (tag, attrs, texto) => {
+      const e = document.createElementNS('http://www.w3.org/2000/svg', tag);
+      for (const [k, v] of Object.entries(attrs || {})) if (v != null) e.setAttribute(k, v);
+      if (texto != null) e.textContent = texto;
+      return e;
+    };
+    const svg = s('svg', { viewBox: '0 0 ' + W + ' ' + H, role: 'img',
+      'aria-label': modo === 'recaudacion' ? 'Recaudación de cada función, separada por método de pago' : modo === 'mix' ? 'Porcentaje de cada método de pago en cada función' : 'Asistentes de cada función frente al aforo de la sala' });
+    if (desliza) { svg.style.width = W + 'px'; svg.style.maxWidth = 'none'; }
+    const defs = s('defs'), rayas = s('pattern', { id: 'ndc-rayas', width: 6, height: 6, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' });
+    rayas.append(s('rect', { width: 6, height: 6, fill: '#FFFFFF' }), s('rect', { width: 2.2, height: 6, fill: '#15130F' }));
+    defs.append(rayas); svg.append(defs);
+    for (const t of ticks) {
+      svg.append(s('line', { class: 'ndc-grid-line', x1: ml, x2: W - mr, y1: y(t), y2: y(t) }));
+      svg.append(s('text', { class: 'ndc-tick', x: ml - 8, y: y(t) + 4, 'text-anchor': 'end' }, fmtTick(t)));
+    }
+    svg.append(s('line', { x1: ml, x2: W - mr, y1: y(0), y2: y(0), stroke: '#15130F', 'stroke-width': 1.5 }));
+    const tip = h('div', { class: 'ndc-tip', role: 'status' });
+    const linea = (a, b) => h('div', {}, h('span', { text: a }), h('span', { text: b }));
+    const oculta = () => tip.classList.remove('is-on');
+    const muestra = (f, cx) => {
+      tip.replaceChildren(h('strong', { text: 'Función ' + f.sesion + ' · ' + (f.dia || '') + ' ' + fecha(f.fecha) + ' · ' + (f.hora || '') }),
+        ...(f.lugar && new Set(filas.map((x) => x.lugar).filter(Boolean)).size > 1 ? [linea('Lugar', f.lugar)] : []),
+        ...(f.celebrada ? [linea('Recaudación', eur(f.total)), ...usados.map((m) => linea(m.nombre, eur(f[m.k] || 0) + (f.total ? ' · ' + nf0.format((f[m.k] || 0) / f.total * 100) + ' %' : ''))), linea('Asistentes', ent(f.asistentes) + ' de ' + ent(f.aforo)), linea('Ocupación', pct(f.ocupacion)), linea('Por espectador', eur(f.por_asistente))]
+          : [linea('Estado', f.sin_datos ? 'Sin datos de recaudación' : 'Pendiente'), linea('Aforo', ent(f.aforo))]));
+      const visto = el.clientWidth || W, k = desliza ? 1 : visto / W, tw = tip.offsetWidth || 200, medio = tramo * k / 2 + 6;
+      const izq = el.scrollLeft, der = izq + visto, px = cx * k;
+      let left = px + medio; if (left + tw > der) left = px - medio - tw; if (left < izq) left = Math.max(izq, Math.min(der - tw, px - tw / 2));
+      tip.style.left = left + 'px'; tip.style.top = '34px';
+      tip.classList.add('is-on');
+    };
+    filas.forEach((f, i) => {
+      const col = s('g', { class: f.celebrada ? '' : 'is-pend' });
+      const x0 = ml + tramo * i + (tramo - bw) / 2, cx = x0 + bw / 2, retardo = 'animation-delay:' + i * 70 + 'ms';
+      if (f.celebrada) {
+        const barra = s('g', { class: animar ? 'ndc-grow' : '', style: retardo });   /* la barra crece desde cero como una pieza */
+        const sobre = s('g', { class: animar ? 'ndc-fade' : '', style: 'animation-delay:' + (i * 70 + 450) + 'ms' });
+        if (modo === 'recaudacion' || modo === 'mix') {
+          /* Pila de métodos: en euros, o en porcentaje de lo recaudado en la función */
+          const escala = modo === 'mix' ? (f.total ? 100 / f.total : 0) : 1;
+          let base = 0;
+          for (const m of usados) {
+            const v = (f[m.k] || 0) * escala; if (v <= 0) continue;
+            const borde = m.k !== 'efectivo';
+            barra.append(s('rect', { x: x0 + (borde ? 0.75 : 0), width: bw - (borde ? 1.5 : 0), y: y(base + v) + (borde ? 0.75 : 0), height: Math.max(0, y(base) - y(base + v) - (borde ? 0.75 : 0)), fill: m.fill, stroke: borde ? '#15130F' : null, 'stroke-width': borde ? 1.5 : null }));
+            base += v;
+          }
+          if (modo === 'recaudacion') sobre.append(s('text', { class: 'ndc-val', x: cx, y: y(f.total) - 7, 'text-anchor': 'middle' }, nf0.format(Math.round(f.total)) + ' €'));
+          else if (f.total) { const sinEf = 100 - (f.efectivo || 0) / f.total * 100; sobre.append(s('text', { class: 'ndc-val', x: cx, y: y(100) - 7, 'text-anchor': 'middle', style: 'font-size:12px' }, nf0.format(sinEf) + (tramo > 90 ? ' % sin efectivo' : ' %'))); }
+          col.append(barra, sobre);
+        } else if (f.asistentes == null) {
+          col.append(s('rect', { x: x0, width: bw, y: y(0) - 26, height: 26, fill: 'none', stroke: '#A49C84', 'stroke-width': 1.5, 'stroke-dasharray': '2 3', rx: 3 }));
+          col.append(s('text', { x: cx, y: y(0) - 9, 'text-anchor': 'middle', style: 'fill:#6A6558;font-size:11px' }, 'Sin dato'));
+        } else {
+          const as = f.asistentes || 0;
+          if (f.aforo) col.append(s('rect', { x: x0, width: bw, y: y(f.aforo), height: y(0) - y(f.aforo), fill: '#F1EBD9', stroke: '#CFC6AC' }));
+          barra.append(s('rect', { x: x0, width: bw, y: y(as), height: y(0) - y(as), fill: '#15130F' }));
+          /* Más público que aforo: se marca el aforo encima de la barra para que se vea que lo supera */
+          if (f.aforo && as > f.aforo) sobre.append(s('line', { x1: x0 - 4, x2: x0 + bw + 4, y1: y(f.aforo), y2: y(f.aforo), stroke: '#E9A31C', 'stroke-width': 3, 'stroke-dasharray': '6 3' }));
+          const techo = f.aforo && as > f.aforo ? y(f.aforo) + 4 : y(as);   /* las cifras, por debajo de la marca de aforo */
+          sobre.append(s('text', { class: 'ndc-val', x: cx, y: techo + 20, 'text-anchor': 'middle', style: 'fill:#FFFDF3;font-size:15px' }, nf0.format(as)));
+          if (f.ocupacion != null) sobre.append(s('text', { x: cx, y: techo + 36, 'text-anchor': 'middle', style: 'fill:#FFFDF3;font-size:12px' }, nf0.format(f.ocupacion) + ' %'));
+          col.append(barra, sobre);
+        }
+      } else {
+        col.append(s('rect', { x: x0, width: bw, y: y(0) - 26, height: 26, fill: 'none', stroke: '#A49C84', 'stroke-width': 1.5, 'stroke-dasharray': '4 4', rx: 3 }));
+      }
+      const p = partes(f.fecha), inicial = String(f.dia || '').slice(0, 1);
+      col.append(s('text', { class: 'ndc-xl', x: cx, y: H - mb + 18, 'text-anchor': 'middle' }, p ? inicial + ' ' + p.d + ' ' + MES[p.m - 1] : 'F' + f.sesion));
+      col.append(s('text', { class: 'ndc-xl2', x: cx, y: H - mb + 34, 'text-anchor': 'middle' }, f.hora || ''));
+      const zona = s('rect', { class: 'ndc-hit', x: ml + tramo * i, width: tramo, y: mt - 20, height: H - mt + 20 });
+      for (const ev of ['pointerenter', 'pointermove', 'click']) zona.addEventListener(ev, () => muestra(f, cx));
+      zona.addEventListener('pointerleave', oculta);
+      col.append(zona);
+      svg.append(col);
+    });
+    el.replaceChildren(svg, tip);
+  });
+
+  dash.draw('obra-tabla', (el) => {
+    const st = estado(['funciones']); if (st !== 'ok') return espera(el, st);
+    const sel = document.getElementById('orden-sesiones');
+    const todas = dash.data('funciones').data.filter((f) => f.obra === N.obra).map((f) => ({ ...f, digital: f.celebrada ? (f.tpv || 0) + (f.qr || 0) : null }));
+    let campo = (sel && sel.value) || 'total';
+    if (campo === 'digital' && !todas.some((f) => (f.tpv || 0) > 0 || (f.qr || 0) > 0)) { campo = 'total'; if (sel) sel.value = 'total'; }
+    const hechas = todas.filter((f) => f.celebrada).sort((a, b) => (campo === 'sesion' ? a.sesion - b.sesion : (b[campo] || 0) - (a[campo] || 0) || a.sesion - b.sesion));
+    const pend = todas.filter((f) => !f.celebrada).sort((a, b) => a.sesion - b.sesion);
+    const nombre = (f) => String(f.dia || '') + ' ' + fecha(f.fecha) + ' · ' + (f.hora || '');
+    const td = (text, cls) => h('td', { class: cls, text });
+    const conDigital = todas.some((f) => (f.tpv || 0) > 0 || (f.qr || 0) > 0);
+    const tabla = el.closest('table'); if (tabla) tabla.classList.toggle('sin-digital', !conDigital);
+    const sel2 = document.getElementById('orden-sesiones');
+    if (sel2) { const op = sel2.querySelector('option[value="digital"]'); if (op) op.hidden = !conDigital; }
+    const orden = ['sesion', 'total', 'efectivo', 'bizum', 'tpv', 'qr', 'asistentes', 'ocupacion', 'por_asistente'];
+    el.replaceChildren(
+      ...hechas.map((f, i) => {
+        const puesto = campo === 'sesion' ? '·' : String(1 + hechas.filter((g) => (g[campo] || 0) > (f[campo] || 0) + 1e-9).length);
+        const celdas = [td(nombre(f)), td(eur(f.total), 'ndc-num'), td(eur(f.efectivo), 'ndc-num'), td(eur(f.bizum), 'ndc-num'), td(f.tpv == null ? '—' : eur(f.tpv), 'ndc-num ndc-col-dig'), td(f.qr == null ? '—' : eur(f.qr), 'ndc-num ndc-col-dig'), td(ent(f.asistentes), 'ndc-num'), td(pct(f.ocupacion), 'ndc-num'), td(eur(f.por_asistente), 'ndc-num')];
+        const k = orden.indexOf(campo); if (k > 0) celdas[k].classList.add('is-sorted');
+        if (campo === 'digital') { celdas[4].classList.add('is-sorted'); celdas[5].classList.add('is-sorted'); }
+        return h('tr', { class: campo !== 'sesion' && puesto === '1' ? 'is-first' : '', 'data-key': encodeURIComponent(f.obra) + ',' + f.sesion }, td(puesto, 'ndc-td-pos'), celdas);
+      }),
+      ...pend.map((f) => h('tr', { class: 'is-pend', 'data-key': encodeURIComponent(f.obra) + ',' + f.sesion }, td('', 'ndc-td-pos'), td(nombre(f)), td(f.sin_datos ? 'Sin datos' : 'Pendiente', 'ndc-num'), td('', 'ndc-num'), td('', 'ndc-num'), td('', 'ndc-num ndc-col-dig'), td('', 'ndc-num ndc-col-dig'), td('', 'ndc-num'), td('', 'ndc-num'), td('', 'ndc-num'))));
+  });
+
+  dash.draw('obra-split', (el) => {
+    const st = estado(['obras_stats', 'funciones']); if (st !== 'ok') return espera(el, st);
+    const o = obraActual(); if (!o || !o.recaudacion) return el.replaceChildren(h('span', { class: 'ndc-fail', text: 'Aún no hay recaudación anotada.' }));
+    const hechas = dash.data('funciones').data.filter((f) => f.obra === o.obra && f.celebrada).sort((a, b) => a.sesion - b.sesion);
+    const usados = metodosDe(hechas);
+    const pctDe = (m) => (o[m.k] || 0) / o.recaudacion * 100;
+    const kids = [
+      h('div', { class: 'ndc-split-bar', role: 'img', 'aria-label': usados.map((m) => m.nombre + ' ' + pct(pctDe(m))).join(', ') },
+        usados.filter((m) => o[m.k] > 0).map((m) => h('i', { class: 'is-' + (m.k === 'efectivo' ? 'ef' : m.k === 'bizum' ? 'bz' : m.k), 'data-w': pctDe(m).toFixed(2) }))),
+      h('div', { class: 'ndc-split-legend' }, usados.map((m) => h('div', {},
+        h('span', {}, h('i', { class: 'ndc-sw ' + m.sw }), m.nombre),
+        h('b', { class: usados.length > 2 ? 'is-small' : null, text: pct(pctDe(m)) }), h('em', { text: eur(o[m.k] || 0) })))),
+    ];
+    /* Desde la primera función con TPV o QR: cuánto entró por esas vías y la comparación con las funciones anteriores */
+    const inicio = hechas.findIndex((f) => (f.tpv || 0) > 0 || (f.qr || 0) > 0);
+    if (inicio >= 0) {
+      const antes = hechas.slice(0, inicio), despues = hechas.slice(inicio);
+      const suma = (filas, k) => filas.reduce((t, f) => t + (f[k] || 0), 0);
+      const nuevo = suma(despues, 'tpv') + suma(despues, 'qr'), totDespues = suma(despues, 'total');
+      const porEsp = (filas) => { const c = filas.filter((f) => f.asistentes); const a = suma(c, 'asistentes'); return a ? suma(c, 'total') / a : null; };
+      const media = (filas) => (filas.length ? suma(filas, 'total') / filas.length : null);
+      const f0 = despues[0];
+      const nota = [h('p', { text: 'Desde la función ' + f0.sesion + ' (' + fecha(f0.fecha) + ') hay TPV y QR: ' + eur(Math.round(nuevo * 100) / 100) + ', el ' + pct(totDespues ? nuevo / totDespues * 100 : null) + ' de lo recaudado en esas ' + despues.length + ' funciones.' })];
+      if (antes.length) nota.push(
+        h('div', { class: 'ndc-cmp' },
+          h('div', {}, h('span', { text: 'Media por función, antes' }), h('b', { text: eur(media(antes)) })),
+          h('div', {}, h('span', { text: 'Media por función, con TPV y QR' }), h('b', { text: eur(media(despues)) })),
+          h('div', {}, h('span', { text: 'Por espectador, antes' }), h('b', { text: eur2(porEsp(antes)) })),
+          h('div', {}, h('span', { text: 'Por espectador, con TPV y QR' }), h('b', { text: eur2(porEsp(despues)) }))),
+        h('p', { text: 'Comparación descriptiva: también cambian el día, la hora y el público de cada función.' }));
+      kids.push(h('div', { class: 'ndc-split-note' }, nota));
+    }
+    el.replaceChildren(...kids);
+    crece(el, primera('split-' + o.obra));
+  });
+
+  dash.draw('obra-bizum', (el) => {
+    const st = estado(['bizum_receptores']); if (st !== 'ok') { vacio(el, false); return espera(el, st); }
+    const filas = dash.data('bizum_receptores').data.filter((b) => b.obra === N.obra)
+      .map((b) => ({ nombre: b.receptor, valor: b.importe, sub: 'En ' + b.funciones + (b.funciones === 1 ? ' función' : ' funciones') }));
+    vacio(el, !filas.length);
+    if (!filas.length) return el.replaceChildren();
+    el.replaceChildren(ranking(filas, { fmt: eur }));
+    crece(el, primera('bizum-' + N.obra));
+  });
+
+  dash.draw('obra-gastos-mini', (el) => {
+    const st = estado(['obras_stats', 'gastos_desglose']); if (st !== 'ok') { vacio(el, false); return espera(el, st); }
+    const o = obraActual(), d = o && desgloseDe(o.obra);
+    /* Las filas "de la obra / del grupo" solo se enseñan si la obra tiene gastos del grupo */
+    const conGrupo = !!(d && d.grupo_total > 0);
+    el.closest('article').querySelectorAll('.ndc-solo-grupo').forEach((x) => x.classList.toggle('is-off', !conGrupo));
+    vacio(el, !d);
+    if (!d) return el.replaceChildren();
+    el.replaceChildren(barraGastos(d, d.total, true));
+    crece(el, primera('gastos-mini-' + o.obra));
+  });
+
+  dash.draw('obra-gastos', (el) => {
+    const st = estado(['obras_stats', 'gastos_desglose', 'gastos']); if (st !== 'ok') return espera(el, st);
+    const o = obraActual(), d = o && desgloseDe(o.obra);
+    if (!d) return el.replaceChildren(h('p', { class: 'ndc-empty', text: 'Esta obra todavía no tiene gastos anotados. Se apuntan en la hoja Gastos de su Excel.' }));
+    const partidas = dash.data('gastos').data.filter((g) => g.obra === o.obra && !g.total_obra);
+    if (!partidas.length) return el.replaceChildren(
+      h('div', { class: 'ndc-gx-head' }, h('div', {}, h('span', { text: 'Gastos totales' }), h('b', { text: eur(d.total) }))),
+      h('p', { class: 'ndc-empty', text: 'Esta obra solo tiene anotado el total de gastos. Si se desglosan en la hoja Gastos como en Hamilton (con Categoría, Tipo y Fecha), aquí se verá en qué se fue el dinero.' }));
+    const pct = (v) => nf0.format(v / d.total * 100) + ' %';
+    const cabeza = h('div', { class: 'ndc-gx-head' },
+      h('div', {}, h('span', { text: 'Gastos totales' }), h('b', { text: eur(d.total) }), h('em', { text: partidas.length + ' partidas' })),
+      h('div', {}, h('span', { text: 'De la obra' }), h('b', { text: eur(d.obra_total) }), h('em', { text: pct(d.obra_total) })),
+      d.grupo_total > 0 ? h('div', {}, h('span', { text: 'Del grupo' }), h('b', { text: eur(d.grupo_total) }), h('em', { text: pct(d.grupo_total) + ', material que se queda' })) : '');
+    const catRank = ranking(d.categorias_obra.map((c) => ({ nombre: c.categoria, valor: c.importe, sub: (c.importe / d.obra_total * 100 < 1 ? 'menos del 1 %' : nf0.format(c.importe / d.obra_total * 100) + ' %') + ' de los gastos de la obra' })), { fmt: eur });
+    catRank.querySelectorAll('.ndc-rank-row').forEach((row, i) => { const bar = row.querySelector('.ndc-bar i'); if (bar) bar.style.background = colorCat(d.categorias_obra[i].categoria); row.classList.remove('is-first'); });
+    const grupo = partidas.filter((g) => g.tipo === 'grupo').sort((a, b) => b.importe - a.importe);
+    const lineaGasto = (g) => h('li', {}, h('span', { class: 'ndc-gx-cat', style: 'background:' + (g.tipo === 'grupo' ? '#FFFFFF' : colorCat(g.categoria)) + (g.tipo === 'grupo' ? ';background-image:repeating-linear-gradient(45deg,#15130F 0 2px,transparent 2px 5px)' : '') }),
+      h('span', { class: 'ndc-gx-txt' }, h('b', { text: g.concepto }), h('small', { text: [g.categoria, g.tipo === 'grupo' ? 'gasto del grupo' : null, g.fecha ? fecha(g.fecha, true) : null].filter(Boolean).join(' · ') })),
+      h('span', { class: 'ndc-gx-amt' + (g.importe < 0 ? ' is-good' : ''), text: (g.importe < 0 ? '+' : '') + eur(Math.abs(g.importe)) }));
+    const grandes = partidas.filter((g) => g.importe > 0).sort((a, b) => b.importe - a.importe).slice(0, 8);
+    const porMes = new Map();
+    for (const g of partidas) if (g.fecha) { const k = g.fecha.slice(0, 7), r = porMes.get(k) || { obra: 0, grupo: 0 }; r[g.tipo === 'grupo' ? 'grupo' : 'obra'] += g.importe; porMes.set(k, r); }
+    const claves = [...porMes.keys()].sort(), topeMes = Math.max(...[...porMes.values()].map((r) => Math.max(0, r.obra) + Math.max(0, r.grupo)), 1);
+    const meses = claves.length ? h('ul', { class: 'ndc-meses' }, claves.map((k) => {
+      const r = porMes.get(k), [y, m] = k.split('-');
+      return h('li', {}, h('span', { class: 'ndc-mes-l', text: MES[+m - 1] + ' ' + y.slice(2) }),
+        h('div', { class: 'ndc-bar ndc-bar-stack' }, h('div', { class: 'ndc-stack' },
+          h('i', { class: 'ndc-seg-g', style: 'background:var(--ink)', 'data-w': (Math.max(0, r.obra) / topeMes * 100).toFixed(2), title: 'De la obra: ' + eur(r.obra) }),
+          r.grupo > 0 ? h('i', { class: 'ndc-seg-g is-grupo', 'data-w': (r.grupo / topeMes * 100).toFixed(2), title: 'Del grupo: ' + eur(r.grupo) }) : '')),
+        h('b', { text: eur(Math.round((r.obra + r.grupo) * 100) / 100) }));
+    })) : h('p', { class: 'ndc-fail', text: 'Las partidas no tienen fecha.' });
+    el.replaceChildren(
+      cabeza,
+      leyendaGastos([d]),
+      barraGastos(d, d.total, true),
+      h('div', { class: 'ndc-gx-grid' },
+        h('section', {}, h('h4', { text: 'Gastos de la obra, por categoría' }), catRank),
+        h('section', {}, h('h4', { text: 'Gastos del grupo' }),
+          grupo.length ? h('p', { class: 'ndc-hint', text: 'Compras que el grupo seguirá usando en próximas obras.' }) : '',
+          grupo.length ? h('ul', { class: 'ndc-gx-list' }, grupo.map(lineaGasto)) : h('p', { class: 'ndc-fail', text: 'Ninguno: todo el gasto fue de la obra.' }))),
+      h('div', { class: 'ndc-gx-grid' },
+        h('section', {}, h('h4', { text: 'Los gastos más grandes' }), h('ul', { class: 'ndc-gx-list' }, grandes.map(lineaGasto))),
+        h('section', {}, h('h4', { text: 'Gasto de la obra por mes' }), h('p', { class: 'ndc-hint', text: 'Cuándo se gastó, según la fecha de cada partida.' }), meses)));
+    crece(el, primera('gastos-' + o.obra));
+  });
+
+  /* ===== Navegación: solo se cambian hidden, clases y aria ===== */
+  const FICHA = ['obra-cabecera', 'obra-kpi', 'obra-sesiones', 'obra-tabla', 'obra-split', 'obra-bizum', 'obra-gastos-mini', 'obra-gastos', 'rank-personas'];
+  const enlace = (n) => { try { dash.setLink(n); } catch (e) {} };
+  N.pestana = (id) => {
+    document.querySelectorAll('.ndc-page').forEach((s) => { s.hidden = s.id !== id; });
+    document.querySelectorAll('.ndc-tab').forEach((t) => t.setAttribute('aria-selected', String(t.dataset.tab === id)));
+    enlace(id);
+  };
+  N.lista = () => {
+    N.obra = null;
+    const l = document.getElementById('obras-lista'), f = document.getElementById('obra-ficha');
+    if (f) f.hidden = true; if (l) l.hidden = false;
+  };
+  N.abre = (obra) => {
+    N.obra = obra;
+    N.pestana('obras');
+    const l = document.getElementById('obras-lista'), f = document.getElementById('obra-ficha');
+    if (l) l.hidden = true; if (f) f.hidden = false;
+    FICHA.forEach((n) => dash.draw(n));
+    const top = document.getElementById('ndc');
+    if (top && top.scrollIntoView) top.scrollIntoView({ block: 'start', behavior: motion ? 'smooth' : 'auto' });
+  };
+  document.querySelectorAll('.ndc-tab').forEach((t) => t.addEventListener('click', () => { if (t.dataset.tab === 'obras') N.lista(); N.pestana(t.dataset.tab); }));
+  document.querySelectorAll('.ndc-back').forEach((b) => b.addEventListener('click', () => N.lista()));
+  document.querySelectorAll('.ndc-seg').forEach((seg) => seg.addEventListener('click', (ev) => {
+    const b = ev.target.closest('button'); if (!b || !seg.contains(b)) return;
+    seg.querySelectorAll('button').forEach((x) => x.setAttribute('aria-pressed', String(x === b)));
+    const destino = document.getElementById(seg.dataset.for);
+    if (destino && destino.dataset.draw) dash.draw(destino.dataset.draw);
+  }));
+  document.querySelectorAll('#orden-sesiones').forEach((s) => s.addEventListener('change', () => dash.draw('obra-tabla')));
+  try { if ((location.hash || '').replace('#', '') === 'obras') N.pestana('obras'); } catch (e) {}
+})();
+
+dash.start();
+</script>
+</body>
+</html>
