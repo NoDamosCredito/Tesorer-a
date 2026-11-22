@@ -8,7 +8,7 @@ assets/      Logo, icono y carteles (assets/carteles/<obra>.jpg)
 
 ## Los Excel
 
-**Uno por obra** (por ejemplo `RECAUDACION_HAMILTON.xlsx`), con el formato de siempre: Sesión, Fecha, Día, Hora, Total, Efectivo, Bizum, Receptor Bizum 1, Recaudación Bizum 1, Receptor Bizum 2, Recaudación Bizum 2, Asistentes, Recaudación por asistente, Aforo, Capacidad, Protagonistas de la sesión, Técnicos, Director.
+**Uno por obra** (por ejemplo `RECAUDACION_HAMILTON.xlsx`), con el formato de siempre: Sesión, Fecha, Día, Hora, Lugar de representación, Total, Efectivo, Bizum, Receptor Bizum 1, Recaudación Bizum 1, Receptor Bizum 2, Recaudación Bizum 2, Asistentes, Recaudación por asistente, Aforo, Capacidad, Protagonistas de la sesión, Técnicos, Director.
 
 - El nombre de la hoja es el título de la obra. Si la hoja se llama "Hoja1" o el nombre está cortado (Excel admite 31 caracteres), el título se toma del nombre del archivo: `Recaudacion_Ni_Oficio_ni_beneficio.xlsx` → Ni Oficio ni beneficio.
 - Los actores van en "Protagonistas de la sesión" (también vale una columna "Actores" o "Ensemble"; se suman todos como actores). Nombres separados por punto y coma.
@@ -17,7 +17,12 @@ assets/      Logo, icono y carteles (assets/carteles/<obra>.jpg)
 - **Métodos de pago.** Desde Hamilton el formato incluye también las columnas TPV y QR, y "Bizum" pasa a llamarse "Digital" (Bizum + TPV + QR). Los dos formatos funcionan: las obras sin TPV ni QR siguen mostrando solo efectivo y Bizum, y en las que sí los tienen aparecen sus columnas, colores y comparativas.
 - El panel calcula con Efectivo, TPV, QR y las columnas "Recaudación Bizum", así que las fórmulas del Excel no le afectan. Se pueden añadir parejas "Receptor Bizum 3 / Recaudación Bizum 3".
 
-**Hoja "Gastos" de cada Excel de obra**: una línea "Total" con los gastos totales de la obra (o varias partidas, una por fila, y el panel las suma). Con ella se calcula el beneficio. Si está vacía, el beneficio sale como "Faltan los gastos".
+**Hoja "Gastos" de cada Excel de obra**, en uno de estos dos formatos:
+
+- Solo el total: una línea "Total" con los gastos de la obra.
+- Desglosado, como Hamilton: una fila por gasto con las columnas Gastos (concepto), Total (importe), Categoría, Tipo y Fecha (la columna Pagador puede estar, pero el panel no la usa). En Tipo, "Gasto obra" o "Gastos generales grupo" (lo que el grupo seguirá usando). Las devoluciones van en negativo y la fila TOTAL se ignora.
+
+Con el desglose, el panel separa en el histórico de beneficios lo que fue de la obra (por categoría) de lo que fue inversión del grupo, calcula el beneficio con y sin esos gastos del grupo, muestra los gastos con fecha en "Últimos gastos" y añade a la ficha de la obra la sección "En qué se gastó".
 
 **`TESORERIA.xlsx`**, con dos hojas:
 
@@ -47,3 +52,15 @@ Mejor sin tildes ni espacios en los nombres de los Excel: evita problemas al sub
 - **Con doble clic**: el navegador no deja leer la carpeta `data`, así que el panel muestra un botón para elegir los Excel (se pueden seleccionar varios a la vez).
 
 Con GitHub Pages activado la web es pública, y los Excel llevan nombres y las cuentas de la asociación.
+
+## Nombres
+
+El panel unifica a la misma persona aunque aparezca escrita de formas distintas: tildes, mayúsculas, guiones, apodos ("Cris" = "Cristina") y nombres incompletos ("Luis García" = "Luis García Iglesias"). Siempre muestra la forma más completa.
+
+Si alguien sigue saliendo con dos nombres, o se juntan dos personas distintas, se corrige al principio del script de `index.html`:
+
+- `APODOS`: apodo → nombre (`mingo: 'domingo'`).
+- `ALIAS`: `'como aparece en el Excel': 'como debe salir'`.
+- `NO_UNIR`: parejas que son personas distintas aunque se parezcan.
+
+Lo más fiable es escribir siempre nombre y primer apellido en los Excel.
